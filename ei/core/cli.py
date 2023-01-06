@@ -9,12 +9,11 @@ from ei.core import defaults
 from ei.core.fields import Field
 from ei.core.service import BaseAwsService
 from ei.core.concurrency import bulk_action
+from ei.core.exceptions import PreflightError
+from ei.core.exceptions import WrongRegionError
+from ei.core.exceptions import WrongAccountError
 from ei.core.table import list_table
 from ei.core.table import detail_table
-
-
-class PreflightError(RuntimeError):
-    pass
 
 
 def _preflight() -> None:
@@ -80,6 +79,20 @@ class BaseCliApp(object):
         self._list_detail_fields = self.short_fields + self.long_fields
         self._full_fields = self._list_detail_fields + self.detail_fields
 
+    def _validate_region(self, region: str) -> None:
+        if region and region not in defaults.EI_REGIONS:
+            raise WrongRegionError(
+                f'{region=} is not in "EI_REGIONS"'
+                f'({defaults.EI_REGIONS=})'
+            )
+
+    def _validate_acocunt_id(self, account_id: str) -> None:
+        if account_id and account_id not in defaults.EI_ACCOUNT_IDS:
+            raise WrongAccountError(
+                f'{account_id=} is not in "EI_ACCOUNT_IDS"'
+                f'({defaults.EI_ACCOUNT_IDS=})'
+            )
+
     def list(
             self,
             long: bool = False,
@@ -90,20 +103,20 @@ class BaseCliApp(object):
             all_accounts: bool = False) -> None:
 
         _preflight()
+        self._validate_region(region)
+        self._validate_acocunt_id(account_id)
 
         if long:
             fields = self._list_detail_fields
         else:
             fields = self.short_fields
 
-        if all_regions:
-            regions = defaults.EI_REGIONS
-        else:
+        regions = defaults.EI_REGIONS
+        if not all_regions:
             regions = [region]
 
-        if all_accounts:
-            account_ids = defaults.EI_ACCOUNT_IDS
-        else:
+        account_ids = defaults.EI_ACCOUNT_IDS
+        if not all_accounts:
             account_ids = [account_id]
 
         try:
@@ -129,6 +142,7 @@ class BaseCliApp(object):
             account_id: str = '') -> None:
 
         _preflight()
+        self._validate_region(region)
 
         try:
             result = self._service.show(id, region, account_id)
