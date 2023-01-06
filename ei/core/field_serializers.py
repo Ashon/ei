@@ -7,6 +7,9 @@ indented_json = partial(json.dumps, indent=2)
 
 
 def serialize_tags(aws_tags):
+    if not aws_tags:
+        return ''
+
     return '\n'.join([
         f'{t["Key"]} = {t["Value"]}'
         for t in aws_tags

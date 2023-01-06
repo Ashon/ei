@@ -2,6 +2,7 @@ import sys
 
 import typer
 
+from ei.cli import ami
 from ei.cli import ec2
 from ei.cli import vpc
 from ei.aws import defaults
@@ -9,6 +10,7 @@ from ei.aws import defaults
 
 APPS = [
     ec2.Ec2CliApp,
+    ami.AmiCliApp,
     vpc.VpcCliApp
 ]
 
