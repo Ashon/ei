@@ -15,8 +15,13 @@ class BaseCliApp(object):
     name: str
     service_cls: BaseAwsService
 
+    # fields for list
     short_fields: tuple
+
+    # additional fields for long list
     long_fields: tuple
+
+    # more additional fields for show resource
     detail_fields: tuple = ()
 
     _service: object

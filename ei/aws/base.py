@@ -10,11 +10,32 @@ class BaseAwsService(object):
 
     @classmethod
     def _list(cls, client: object) -> list[dict]:
-        raise NotImplementedError()
+        """List diapatcher using client
+
+        Should returns aws resource list
+
+        Example =
+            [
+                {object A},
+                {object B},
+                {object C},
+                ...
+            ]
+        """
+
+        raise NotImplementedError('_list() dispatcher not implemented')
 
     @classmethod
     def _show(cls, client: object, id: str) -> dict:
-        raise NotImplementedError()
+        """Show diapatcher using aws client
+
+        Should returns aws resource
+
+        Example =
+            {object A}
+        """
+
+        raise NotImplementedError('_show() dispatcher not implemented')
 
     @classmethod
     def _defaulting_args(cls, region: str, account_id: str) -> tuple:
