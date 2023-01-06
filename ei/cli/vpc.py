@@ -1,5 +1,6 @@
 from ei.core.cli import BaseCliApp
 from ei.core.fields import Field
+from ei.core.fields import IDField
 from ei.core.fields import TagField
 from ei.core.fields import DictField
 from ei.core.fields import extract_from_tag
@@ -15,7 +16,7 @@ class VpcCliApp(BaseCliApp):
     short_fields = (
         Field('Region'),
         Field('Account'),
-        Field('VpcId'),
+        IDField('VpcId'),
         Field('Name', serializer=extract_from_tag('Name')),
         Field('InstanceTenancy'),
         Field('IsDefault'),

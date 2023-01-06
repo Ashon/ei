@@ -3,6 +3,7 @@ from typing import Type
 from ei.core.cli import BaseCliApp
 from ei.core.service import BaseAwsService
 from ei.core.fields import Field
+from ei.core.fields import IDField
 from ei.core.fields import TagField
 from ei.aws.ami import AwsAmiService
 
@@ -16,7 +17,7 @@ class AmiCliApp(BaseCliApp):
     short_fields = (
         Field('Region'),
         Field('Account'),
-        Field('ImageId'),
+        IDField('ImageId'),
         Field('Name'),
         Field('Public'),
         Field('State'),

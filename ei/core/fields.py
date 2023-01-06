@@ -1,6 +1,9 @@
 from typing import Any
 from typing import Callable
 from typing import Optional
+from typing import Collection
+
+from rich.pretty import pretty_repr
 
 
 def _serialize(record: Any, raw_value: Any) -> Any:
@@ -47,23 +50,35 @@ class Field(object):
         return self.serialize(record, raw_value)
 
 
+class IDField(Field):
+    def serialize(self, record: Any, raw_value: Any) -> str:
+        return f'[bold]{raw_value}[/bold]'
+
+
 class TagField(Field):
     def serialize(self, record: Any, raw_value: Any) -> str:
         if not raw_value:
             return ''
 
         return '\n'.join([
-            f'{tag["Key"]} = {tag["Value"]}'
+            f'[bright_black]{tag["Key"]}[/bright_black]: {tag["Value"]}'
             for tag in raw_value
         ])
 
 
 class DictField(Field):
-    def serialize(self, record: Any, raw_value: Any) -> str:
+    def _render_obj(self, obj: dict) -> str:
         return '\n'.join([
-            '\n'.join([
-                f'{key} = {value}'
-                for key, value in obj.items()
-            ])
-            for obj in raw_value
+            f'[bright_black]{key}[/bright_black]:'
+            f' {pretty_repr(value) if isinstance(value, Collection) else value}'
+            for key, value in obj.items()
         ])
+
+    def serialize(self, record: Any, raw_value: Any) -> str:
+        if type(raw_value) is list:
+            return '\n'.join([
+                self._render_obj(obj)
+                for obj in raw_value
+            ])
+        else:
+            return self._render_obj(raw_value)
