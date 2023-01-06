@@ -1,3 +1,4 @@
+import typer
 
 from ei.cli import ami
 from ei.cli import ec2
@@ -13,4 +14,15 @@ APPS = [
     elasticache.CacheClusterCliApp,
 ]
 
-__all__ = ['APPS']
+
+def create_application():
+    cli = typer.Typer()
+
+    for app in APPS:
+        obj = app()
+        cli.add_typer(obj.typer())
+
+    return cli
+
+
+__all__ = ['create_application']

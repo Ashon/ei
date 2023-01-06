@@ -1,16 +1,4 @@
-import typer
-
-from ei.cli import APPS
+from ei.cli import create_application
 
 
-def main():
-    cli = typer.Typer()
-
-    for app in APPS:
-        obj = app()
-        cli.add_typer(obj.typer())
-
-    return cli
-
-
-cli = main()
+cli = create_application()
