@@ -47,6 +47,7 @@ dependencies = [
   "pytest",
   "pytest-cov",
 ]
+
 [tool.hatch.envs.default.scripts]
 cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=ei --cov=tests {args}"
 no-cov = "cov --no-cov {args}"
@@ -67,3 +68,9 @@ exclude_lines = [
   "if __name__ == .__main__.:",
   "if TYPE_CHECKING:",
 ]
+
+[tool.flake8]
+exclude=
+  .git,
+  __pycache__,
+  tmp,

@@ -9,7 +9,7 @@ def list_table(fields, items):
     table = Table(*fields, box=box.ROUNDED)
 
     for item in items:
-        table.add_row(*item.values())
+        table.add_row(*[v for v in item])
 
     return table
 
