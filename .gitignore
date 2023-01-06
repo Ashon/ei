@@ -1,5 +1,6 @@
 .vscode
 .env
 .python-version
+.coverage
 *.py[c|o]
 **/__pycache__

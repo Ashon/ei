@@ -2,8 +2,8 @@ from typer import Typer
 from rich.console import Console
 from botocore.exceptions import ClientError
 
-from ei.aws import _defaults
-from ei.aws._base import BaseAwsService
+from ei.core import defaults
+from ei.core.service import BaseAwsService
 from ei.core.concurrency import bulk_action
 from ei.core.table import list_table
 from ei.core.table import detail_table
@@ -14,40 +14,39 @@ class PreflightError(RuntimeError):
 
 
 def _preflight():
-    if not all(_defaults.CONFIGS):
+    if not all(defaults.CONFIGS):
         raise PreflightError('\n'.join((
             (
                 'Environment variables are not fulfilled.'
                 ' Check the environment variables.'
             ),
             '',
-            f'{_defaults.EI_ACCOUNT_IDS=}',
-            f'{_defaults.EI_REGIONS=}',
-            f'{_defaults.EI_ASSUME_ROLE_ARN_PATTERN=}',
-            f'{_defaults.EI_ASSUME_ROLE_SESSION_NAME=}',
-            f'{_defaults.AWS_REGION=}',
-            f'{_defaults.AWS_ACCESS_KEY_ID=}',
-            f'{_defaults.AWS_SECRET_ACCESS_KEY=}',
-            f'{_defaults.AWS_SECURITY_TOKEN=}',
-            f'{_defaults.AWS_SESSION_EXPIRATION=}',
+            f'{defaults.EI_ACCOUNT_IDS=}',
+            f'{defaults.EI_REGIONS=}',
+            f'{defaults.EI_ASSUME_ROLE_ARN_PATTERN=}',
+            f'{defaults.EI_ASSUME_ROLE_SESSION_NAME=}',
+            f'{defaults.AWS_REGION=}',
+            f'{defaults.AWS_ACCESS_KEY_ID=}',
+            f'{defaults.AWS_SECRET_ACCESS_KEY=}',
+            f'{defaults.AWS_SECURITY_TOKEN=}',
+            f'{defaults.AWS_SESSION_EXPIRATION=}',
         )))
 
 
-def _serialize_data_as_list(headers, results):
+def _serialize_data_as_list(fields, results):
     return [
         [
-            serializer(item, item.get(field, ''))
-            for field, serializer in headers
+            serializer(item)
+            for serializer in fields
         ] for item in results
     ]
 
 
-def _serialize_data_as_dict(headers, result):
+def _serialize_data_as_dict(fields, result):
     serialized = {}
 
-    for field, serializer in headers:
-        raw_value = result.get(field, '')
-        serialized[field] = serializer(result, raw_value)
+    for field in fields:
+        serialized[field._name] = field(result)
 
     return serialized
 
@@ -87,25 +86,27 @@ class BaseCliApp(object):
         _preflight()
 
         if long:
-            headers = self._list_detail_fields
+            fields = self._list_detail_fields
         else:
-            headers = self.short_fields
+            fields = self.short_fields
 
         if all_regions:
-            regions = _defaults.EI_REGIONS
+            regions = defaults.EI_REGIONS
         else:
             regions = [region]
 
         if all_accounts:
-            account_ids = _defaults.EI_ACCOUNT_IDS
+            account_ids = defaults.EI_ACCOUNT_IDS
         else:
             account_ids = [account_id]
 
         try:
             results = bulk_action(self._service.list, regions, account_ids)
-            serialized_results = _serialize_data_as_list(headers, results)
+            serialized_results = _serialize_data_as_list(fields, results)
 
-            table = list_table([h[0] for h in headers], serialized_results)
+            table = list_table([
+                field._name for field in fields
+            ], serialized_results)
             self._console.print(table)
 
         except ClientError as e:

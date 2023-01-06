@@ -1,12 +1,12 @@
 from concurrent.futures import ThreadPoolExecutor
 from itertools import chain
 
-from ei.aws import _defaults
+from ei.core import defaults
 
 
 def bulk_action(fn, regions, account_ids):
     tasks = []
-    with ThreadPoolExecutor(max_workers=_defaults.CORES) as executor:
+    with ThreadPoolExecutor(max_workers=defaults.CORES) as executor:
         for account_id in account_ids:
             for region in regions:
                 tasks.append(executor.submit(fn, region, account_id))

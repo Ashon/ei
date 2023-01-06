@@ -1,6 +1,6 @@
 from mypy_boto3_elasticache.client import ElastiCacheClient
 
-from ei.aws._base import BaseAwsService
+from ei.core.service import BaseAwsService
 
 
 class AwsElasticacheReplicationGroupService(BaseAwsService):
