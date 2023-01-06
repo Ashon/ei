@@ -10,7 +10,7 @@ requires-python = ">=3.7"
 license = "MIT"
 keywords = []
 authors = [
-  { name = "Ashon Lee", email = "ashon.lee@daangn.com" },
+  { name = "Ashon", email = "ashon8813@gmail.com" },
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
