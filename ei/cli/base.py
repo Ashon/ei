@@ -11,6 +11,31 @@ from ei.core.data_serializers import serialize_data_as_list
 from ei.core.data_serializers import serialize_data_as_dict
 
 
+class PreflightError(RuntimeError):
+    pass
+
+
+def _preflight():
+    for config in defaults.CONFIGS:
+        if not config:
+            raise PreflightError('\n'.join((
+                (
+                    'Environment variables are not fulfilled.'
+                    ' Check the environment variables.'
+                ),
+                '',
+                f'{defaults.EI_ACCOUNT_IDS=}',
+                f'{defaults.EI_REGIONS=}',
+                f'{defaults.EI_ASSUME_ROLE_ARN_PATTERN=}',
+                f'{defaults.EI_ASSUME_ROLE_SESSION_NAME=}',
+                f'{defaults.AWS_REGION=}',
+                f'{defaults.AWS_ACCESS_KEY_ID=}',
+                f'{defaults.AWS_SECRET_ACCESS_KEY=}',
+                f'{defaults.AWS_SECURITY_TOKEN=}',
+                f'{defaults.AWS_SESSION_EXPIRATION=}',
+            )))
+
+
 class BaseCliApp(object):
     name: str
     service_cls: BaseAwsService
@@ -40,6 +65,8 @@ class BaseCliApp(object):
             account_id: str = '',
             all_regions: bool = False,
             all_accounts: bool = False) -> None:
+
+        _preflight()
 
         if long:
             headers = self._list_detail_fields
@@ -71,6 +98,8 @@ class BaseCliApp(object):
             id: str,
             region: str = '',
             account_id: str = '') -> None:
+
+        _preflight()
 
         try:
             result = self._service.show(id, region, account_id)

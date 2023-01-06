@@ -28,13 +28,3 @@ CONFIGS = (
     os.getenv('AWS_SECURITY_TOKEN'),
     os.getenv('AWS_SESSION_EXPIRATION')
 )
-
-
-class PreflightError(RuntimeError):
-    pass
-
-
-def preflight():
-    for config in CONFIGS:
-        if not config:
-            raise PreflightError()
