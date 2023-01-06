@@ -70,7 +70,8 @@ exclude_lines = [
 ]
 
 [tool.flake8]
-exclude=
-  .git,
-  __pycache__,
-  tmp,
+exclude=[
+  ".git",
+  "__pycache__",
+  "tmp",
+]
