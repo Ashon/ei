@@ -8,6 +8,9 @@ def list(region: str, account_id: str):
     if not region:
         region = defaults.AWS_REGION
 
+    if not account_id:
+        account_id = defaults.EI_ACCOUNT_IDS[0]
+
     result = None
 
     with client_session(
@@ -24,6 +27,9 @@ def list(region: str, account_id: str):
 def show(id: str, region: str, account_id: str):
     if not region:
         region = defaults.AWS_REGION
+
+    if not account_id:
+        account_id = defaults.EI_ACCOUNT_IDS[0]
 
     result = None
 
