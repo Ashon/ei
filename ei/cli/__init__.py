@@ -16,7 +16,7 @@ APPS = [
 
 
 def create_application() -> typer.Typer:
-    cli = typer.Typer()
+    cli = typer.Typer(help='A[ei] - AWS CLI for humans.')
 
     for app in APPS:
         obj = app()
