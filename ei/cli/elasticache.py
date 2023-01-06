@@ -1,4 +1,4 @@
-from ei.cli.base import BaseCliApp
+from ei.cli._base import BaseCliApp
 from ei.aws.elasticache import AwsElasticacheReplicationGroupService
 from ei.aws.elasticache import AwsElasticacheCacheClusterService
 from ei.core.field_serializers import serialize_tags

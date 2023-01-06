@@ -2,8 +2,8 @@ from typing import Any
 from typing import List
 from typing import Callable
 
-from ei.aws import defaults
-from ei.aws.session import client_session
+from ei.aws import _defaults
+from ei.aws._session import client_session
 
 
 class BaseAwsService(object):
@@ -41,10 +41,10 @@ class BaseAwsService(object):
     @classmethod
     def _defaulting_args(cls, region: str, account_id: str) -> tuple:
         if not region:
-            region = defaults.AWS_REGION
+            region = _defaults.AWS_REGION
 
         if not account_id:
-            account_id = defaults.EI_ACCOUNT_IDS[0]
+            account_id = _defaults.EI_ACCOUNT_IDS[0]
 
         return region, account_id
 

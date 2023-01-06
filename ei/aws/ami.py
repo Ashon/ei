@@ -1,7 +1,7 @@
 from mypy_boto3_ec2 import EC2Client
 
-from ei.aws import defaults
-from ei.aws.base import BaseAwsService
+from ei.aws import _defaults
+from ei.aws._base import BaseAwsService
 
 
 class AwsAmiService(BaseAwsService):
@@ -10,7 +10,7 @@ class AwsAmiService(BaseAwsService):
     @classmethod
     def _list(cls, client: EC2Client) -> list[dict]:
         images = client.describe_images(
-            Owners=defaults.EI_ACCOUNT_IDS)['Images']
+            Owners=_defaults.EI_ACCOUNT_IDS)['Images']
         return images
 
     @classmethod

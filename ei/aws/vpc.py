@@ -1,6 +1,6 @@
 from mypy_boto3_ec2 import EC2Client
 
-from ei.aws.base import BaseAwsService
+from ei.aws._base import BaseAwsService
 
 
 class AwsVpcService(BaseAwsService):

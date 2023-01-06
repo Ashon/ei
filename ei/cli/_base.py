@@ -2,8 +2,8 @@ from typer import Typer
 from rich.console import Console
 from botocore.exceptions import ClientError
 
-from ei.aws import defaults
-from ei.aws.base import BaseAwsService
+from ei.aws import _defaults
+from ei.aws._base import BaseAwsService
 from ei.core.concurrency import bulk_action
 from ei.core.table import list_table
 from ei.core.table import detail_table
@@ -16,22 +16,22 @@ class PreflightError(RuntimeError):
 
 
 def _preflight():
-    if not all(defaults.CONFIGS):
+    if not all(_defaults.CONFIGS):
         raise PreflightError('\n'.join((
             (
                 'Environment variables are not fulfilled.'
                 ' Check the environment variables.'
             ),
             '',
-            f'{defaults.EI_ACCOUNT_IDS=}',
-            f'{defaults.EI_REGIONS=}',
-            f'{defaults.EI_ASSUME_ROLE_ARN_PATTERN=}',
-            f'{defaults.EI_ASSUME_ROLE_SESSION_NAME=}',
-            f'{defaults.AWS_REGION=}',
-            f'{defaults.AWS_ACCESS_KEY_ID=}',
-            f'{defaults.AWS_SECRET_ACCESS_KEY=}',
-            f'{defaults.AWS_SECURITY_TOKEN=}',
-            f'{defaults.AWS_SESSION_EXPIRATION=}',
+            f'{_defaults.EI_ACCOUNT_IDS=}',
+            f'{_defaults.EI_REGIONS=}',
+            f'{_defaults.EI_ASSUME_ROLE_ARN_PATTERN=}',
+            f'{_defaults.EI_ASSUME_ROLE_SESSION_NAME=}',
+            f'{_defaults.AWS_REGION=}',
+            f'{_defaults.AWS_ACCESS_KEY_ID=}',
+            f'{_defaults.AWS_SECRET_ACCESS_KEY=}',
+            f'{_defaults.AWS_SECURITY_TOKEN=}',
+            f'{_defaults.AWS_SESSION_EXPIRATION=}',
         )))
 
 
@@ -75,12 +75,12 @@ class BaseCliApp(object):
             headers = self.short_fields
 
         if all_regions:
-            regions = defaults.EI_REGIONS
+            regions = _defaults.EI_REGIONS
         else:
             regions = [region]
 
         if all_accounts:
-            account_ids = defaults.EI_ACCOUNT_IDS
+            account_ids = _defaults.EI_ACCOUNT_IDS
         else:
             account_ids = [account_id]
 

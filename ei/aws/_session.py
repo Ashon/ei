@@ -7,7 +7,7 @@ import boto3
 from botocore.credentials import DeferredRefreshableCredentials
 from botocore.session import get_session
 
-from ei.aws import defaults
+from ei.aws import _defaults
 
 
 if TYPE_CHECKING:
@@ -17,11 +17,12 @@ if TYPE_CHECKING:
 def from_sts(account_id):
     sts_client = boto3.Session().client('sts')
 
-    role_arn = defaults.EI_ASSUME_ROLE_ARN_PATTERN.format(
+    role_arn = _defaults.EI_ASSUME_ROLE_ARN_PATTERN.format(
         account_id=account_id)
 
     assumed_role_object: dict = sts_client.assume_role(
-        RoleArn=role_arn, RoleSessionName=defaults.EI_ASSUME_ROLE_SESSION_NAME)
+        RoleArn=role_arn,
+        RoleSessionName=_defaults.EI_ASSUME_ROLE_SESSION_NAME)
 
     credentials: dict = assumed_role_object['Credentials']
 
@@ -30,11 +31,11 @@ def from_sts(account_id):
 
 def from_env():
     credentials = {
-        'AccessKeyId': defaults.AWS_ACCESS_KEY_ID,
-        'SecretAccessKey': defaults.AWS_SECRET_ACCESS_KEY,
-        'SessionToken': defaults.AWS_SECURITY_TOKEN,
+        'AccessKeyId': _defaults.AWS_ACCESS_KEY_ID,
+        'SecretAccessKey': _defaults.AWS_SECRET_ACCESS_KEY,
+        'SessionToken': _defaults.AWS_SECURITY_TOKEN,
         'Expiration': datetime.datetime.fromisoformat(
-            defaults.AWS_SESSION_EXPIRATION)
+            _defaults.AWS_SESSION_EXPIRATION)
     }
 
     return credentials
@@ -46,7 +47,7 @@ credential_resolver = from_sts
 
 def create_session(
         service_name: str, account_id: str,
-        region: str = defaults.AWS_REGION) -> boto3.Session.client:
+        region: str = _defaults.AWS_REGION) -> boto3.Session.client:
     """Creates client session via sts client
     """
 
@@ -77,7 +78,7 @@ def create_session(
 @contextmanager
 def client_session(
         service_name: str, account_id: str,
-        region: str = defaults.AWS_REGION) -> Generator:
+        region: str = _defaults.AWS_REGION) -> Generator:
     session = create_session(
         service_name=service_name, account_id=account_id, region=region)
 

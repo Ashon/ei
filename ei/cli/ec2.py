@@ -1,4 +1,4 @@
-from ei.cli.base import BaseCliApp
+from ei.cli._base import BaseCliApp
 from ei.aws.ec2 import AwsEc2Service
 from ei.core.field_serializers import serialize_tags
 # from ei.core.field_serializers import serialize_dict_list
