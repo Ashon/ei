@@ -14,6 +14,20 @@ if TYPE_CHECKING:
     from botocore.session import Session  # noqa: F401
 
 
+def from_sts(account_id):
+    sts_client = boto3.Session().client('sts')
+
+    role_arn = defaults.EI_ASSUME_ROLE_ARN_PATTERN.format(
+        account_id=account_id)
+
+    assumed_role_object: dict = sts_client.assume_role(
+        RoleArn=role_arn, RoleSessionName=defaults.EI_ASSUME_ROLE_SESSION_NAME)
+
+    credentials: dict = assumed_role_object['Credentials']
+
+    return credentials
+
+
 def from_env():
     credentials = {
         'AccessKeyId': defaults.AWS_ACCESS_KEY_ID,
@@ -26,14 +40,18 @@ def from_env():
     return credentials
 
 
+# credential_resolver = from_env
+credential_resolver = from_sts
+
+
 def create_session(
-        service_name: str,
+        service_name: str, account_id: str,
         region: str = defaults.AWS_REGION) -> boto3.Session.client:
     """Creates client session via sts client
     """
 
     def _get_session_creds():
-        credentials = from_env()
+        credentials = credential_resolver(account_id)
 
         credential_metadata = {
             'access_key': credentials.get('AccessKeyId'),
@@ -58,8 +76,9 @@ def create_session(
 
 @contextmanager
 def client_session(
-        service_name: str,
+        service_name: str, account_id: str,
         region: str = defaults.AWS_REGION) -> Generator:
-    session = create_session(service_name=service_name, region=region)
+    session = create_session(
+        service_name=service_name, account_id=account_id, region=region)
 
     yield session

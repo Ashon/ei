@@ -4,31 +4,35 @@ from ei.aws import defaults
 from ei.aws.session import client_session
 
 
-def list(region: str):
+def list(region: str, account_id: str):
     if not region:
         region = defaults.AWS_REGION
 
     result = None
 
-    with client_session(region=region, service_name='ec2') as client:
+    with client_session(
+            account_id=account_id, region=region,
+            service_name='ec2') as client:
         client: EC2Client
 
         result = client.describe_vpcs()
-        result = result['Vpcs']
+        result = [{'Region': region, **obj} for obj in result['Vpcs']]
 
     return result
 
 
-def show(id: str, region: str):
+def show(id: str, region: str, account_id: str):
     if not region:
         region = defaults.AWS_REGION
 
     result = None
 
-    with client_session(region=region, service_name='ec2') as client:
+    with client_session(
+            account_id=account_id, region=region,
+            service_name='ec2') as client:
         client: EC2Client
 
         result = client.describe_vpcs(VpcIds=[id])
-        result = result['Vpcs'][0]
+        result = [{'Region': region, **obj} for obj in result['Vpcs']][0]
 
     return result

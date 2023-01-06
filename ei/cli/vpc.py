@@ -1,8 +1,12 @@
 from typer import Typer
+from concurrent.futures import ThreadPoolExecutor
+from itertools import chain
+
 from rich.console import Console
 from botocore.exceptions import ClientError
 
 from ei.aws import vpc
+from ei.aws import defaults
 from ei.core.table import list_table
 from ei.core.table import detail_table
 from ei.core.field_serializers import serialize_tags
@@ -16,6 +20,7 @@ app = Typer(name='vpc')
 
 
 VPC_FIELDS = (
+    ('Region', str),
     ('VpcId', str),
     ('OwnerId', str),
     ('InstanceTenancy', str),
@@ -34,12 +39,30 @@ FULL_FIELDS = VPC_FIELDS + MORE_FIELDS
 
 
 @app.command()
-def list(long: bool = False, region: str = ''):
+def list(
+        long: bool = False,
+        region: str = '',
+        all_regions: bool = False):
+
     headers = VPC_FIELDS
     if long:
         headers = FULL_FIELDS
 
-    results = vpc.list(region=region)
+    if not all_regions:
+        results = vpc.list(region=region)
+
+    else:
+        tasks = []
+        with ThreadPoolExecutor(max_workers=defaults.CORES) as executor:
+            for account_id in defaults.EI_ACCOUNT_IDS:
+                for region in defaults.EI_REGIONS:
+                    tasks.append(
+                        executor.submit(vpc.list, region, account_id)
+                    )
+
+        results = [t.result() for t in tasks]
+        results = chain(*results)
+
     serialized_results = serialize_data_as_list(headers, results)
 
     table = list_table([h[0] for h in headers], serialized_results)
