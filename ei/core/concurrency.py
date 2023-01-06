@@ -13,3 +13,5 @@ def bulk_action(fn, regions, account_ids):
 
     results = [t.result() for t in tasks]
     results = chain(*results)
+
+    return results

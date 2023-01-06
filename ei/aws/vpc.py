@@ -1,44 +1,15 @@
 from mypy_boto3_ec2 import EC2Client
 
-from ei.aws import defaults
-from ei.aws.session import client_session
+from ei.aws.base import BaseAwsService
 
 
-def list(region: str, account_id: str):
-    if not region:
-        region = defaults.AWS_REGION
+class AwsVpcService(BaseAwsService):
+    service_name = 'ec2'
 
-    if not account_id:
-        account_id = defaults.EI_ACCOUNT_IDS[0]
+    @classmethod
+    def _list(cls, client: EC2Client) -> list[dict]:
+        return client.describe_vpcs()['Vpcs']
 
-    result = None
-
-    with client_session(
-            account_id=account_id, region=region,
-            service_name='ec2') as client:
-        client: EC2Client
-
-        result = client.describe_vpcs()
-        result = [{'Region': region, **obj} for obj in result['Vpcs']]
-
-    return result
-
-
-def show(id: str, region: str, account_id: str):
-    if not region:
-        region = defaults.AWS_REGION
-
-    if not account_id:
-        account_id = defaults.EI_ACCOUNT_IDS[0]
-
-    result = None
-
-    with client_session(
-            account_id=account_id, region=region,
-            service_name='ec2') as client:
-        client: EC2Client
-
-        result = client.describe_vpcs(VpcIds=[id])
-        result = [{'Region': region, **obj} for obj in result['Vpcs']][0]
-
-    return result
+    @classmethod
+    def _show(cls, client: EC2Client, id: str) -> dict:
+        return client.describe_vpcs(VpcIds=[id])['Vpcs']
