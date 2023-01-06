@@ -7,8 +7,6 @@ from ei.aws._base import BaseAwsService
 from ei.core.concurrency import bulk_action
 from ei.core.table import list_table
 from ei.core.table import detail_table
-from ei.core.data_serializers import serialize_data_as_list
-from ei.core.data_serializers import serialize_data_as_dict
 
 
 class PreflightError(RuntimeError):
@@ -33,6 +31,25 @@ def _preflight():
             f'{_defaults.AWS_SECURITY_TOKEN=}',
             f'{_defaults.AWS_SESSION_EXPIRATION=}',
         )))
+
+
+def _serialize_data_as_list(headers, results):
+    return [
+        [
+            serializer(item, item.get(field, ''))
+            for field, serializer in headers
+        ] for item in results
+    ]
+
+
+def _serialize_data_as_dict(headers, result):
+    serialized = {}
+
+    for field, serializer in headers:
+        raw_value = result.get(field, '')
+        serialized[field] = serializer(result, raw_value)
+
+    return serialized
 
 
 class BaseCliApp(object):
@@ -86,7 +103,7 @@ class BaseCliApp(object):
 
         try:
             results = bulk_action(self._service.list, regions, account_ids)
-            serialized_results = serialize_data_as_list(headers, results)
+            serialized_results = _serialize_data_as_list(headers, results)
 
             table = list_table([h[0] for h in headers], serialized_results)
             self._console.print(table)
@@ -104,7 +121,7 @@ class BaseCliApp(object):
 
         try:
             result = self._service.show(id, region, account_id)
-            serialized_result = serialize_data_as_dict(
+            serialized_result = _serialize_data_as_dict(
                 self._full_fields, result)
 
             table = detail_table(serialized_result)
