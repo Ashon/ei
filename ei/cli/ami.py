@@ -1,4 +1,7 @@
+from typing import Type
+
 from ei.core.cli import BaseCliApp
+from ei.core.service import BaseAwsService
 from ei.core.fields import Field
 from ei.core.fields import TagField
 from ei.aws.ami import AwsAmiService
@@ -8,7 +11,7 @@ class AmiCliApp(BaseCliApp):
     name: str = 'ami'
     description: str = 'EC2 AMI'
 
-    service_cls = AwsAmiService
+    service_cls: Type[BaseAwsService] = AwsAmiService
 
     short_fields = (
         Field('Region'),

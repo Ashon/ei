@@ -5,7 +5,7 @@ from rich.table import Table
 DETAIL_FIELDS = ['key', 'value']
 
 
-def list_table(fields, items):
+def list_table(fields: list[str], items: list) -> Table:
     table = Table(*fields, box=box.ROUNDED)
 
     for item in items:
@@ -14,7 +14,7 @@ def list_table(fields, items):
     return table
 
 
-def detail_table(item):
+def detail_table(item: dict) -> Table:
     table = Table(*DETAIL_FIELDS, box=box.ROUNDED)
 
     for key, value in item.items():

@@ -53,8 +53,9 @@ dependencies = [
 ]
 
 [tool.hatch.envs.default.scripts]
-cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=ei --cov=tests {args}"
-no-cov = "cov --no-cov {args}"
+lint = "flake8 ."
+test = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=ei --cov=tests {args}"
+typecheck = "mypy ."
 
 [[tool.hatch.envs.test.matrix]]
 python = ["37", "38", "39", "310", "311"]
@@ -64,18 +65,35 @@ branch = true
 parallel = true
 omit = [
   "ei/__about__.py",
+  "**/tests/**"
 ]
 
 [tool.coverage.report]
+show_missing = true
 exclude_lines = [
   "no cov",
-  "if __name__ == .__main__.:",
+  "def __repr__",
+  "def __str__",
   "if TYPE_CHECKING:",
+  "if __name__ == .__main__.:",
+  "raise NotImplementedError",
+  "raise AssertionError"
 ]
+sort = "-Cover"
 
 [tool.flake8]
 exclude=[
   ".git",
   "__pycache__",
-  "tmp",
+  "tmp"
 ]
+
+[tool.mypy]
+strict = true
+ignore_missing_imports = true
+disallow_subclassing_any = false
+disallow_untyped_calls = false
+disallow_untyped_decorators = false
+disallow_any_generics = false
+disallow_untyped_defs = true
+implicit_reexport = true

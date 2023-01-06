@@ -2,6 +2,7 @@ import datetime
 from contextlib import contextmanager
 from typing import TYPE_CHECKING
 from typing import Generator
+from typing import Optional
 
 import boto3
 from botocore.credentials import DeferredRefreshableCredentials
@@ -14,7 +15,7 @@ if TYPE_CHECKING:
     from botocore.session import Session  # noqa: F401
 
 
-def from_sts(account_id):
+def from_sts(account_id: str) -> dict:
     sts_client = boto3.Session().client('sts')
 
     role_arn = defaults.EI_ASSUME_ROLE_ARN_PATTERN.format(
@@ -29,7 +30,7 @@ def from_sts(account_id):
     return credentials
 
 
-def from_env():
+def from_env() -> dict:
     credentials = {
         'AccessKeyId': defaults.AWS_ACCESS_KEY_ID,
         'SecretAccessKey': defaults.AWS_SECRET_ACCESS_KEY,
@@ -47,18 +48,18 @@ credential_resolver = from_sts
 
 def create_session(
         service_name: str, account_id: str,
-        region: str = defaults.AWS_REGION) -> boto3.Session.client:
+        region: Optional[str] = defaults.AWS_REGION) -> boto3.Session.client:
     """Creates client session via sts client
     """
 
-    def _get_session_creds():
+    def _get_session_creds() -> dict:
         credentials = credential_resolver(account_id)
 
         credential_metadata = {
-            'access_key': credentials.get('AccessKeyId'),
-            'secret_key': credentials.get('SecretAccessKey'),
-            'token': credentials.get('SessionToken'),
-            'expiry_time': credentials.get('Expiration').isoformat(),
+            'access_key': credentials['AccessKeyId'],
+            'secret_key': credentials['SecretAccessKey'],
+            'token': credentials['SessionToken'],
+            'expiry_time': credentials['Expiration'].isoformat(),
         }
 
         return credential_metadata
@@ -78,7 +79,7 @@ def create_session(
 @contextmanager
 def client_session(
         service_name: str, account_id: str,
-        region: str = defaults.AWS_REGION) -> Generator:
+        region: Optional[str] = defaults.AWS_REGION) -> Generator:
     session = create_session(
         service_name=service_name, account_id=account_id, region=region)
 

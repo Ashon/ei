@@ -1,8 +1,12 @@
+from typing import Type
+from typing import Iterable
+
 from typer import Typer
 from rich.console import Console
 from botocore.exceptions import ClientError
 
 from ei.core import defaults
+from ei.core.fields import Field
 from ei.core.service import BaseAwsService
 from ei.core.concurrency import bulk_action
 from ei.core.table import list_table
@@ -13,7 +17,7 @@ class PreflightError(RuntimeError):
     pass
 
 
-def _preflight():
+def _preflight() -> None:
     if not all(defaults.CONFIGS):
         raise PreflightError('\n'.join((
             (
@@ -33,7 +37,8 @@ def _preflight():
         )))
 
 
-def _serialize_data_as_list(fields, results):
+def _serialize_data_as_list(fields: Iterable[Field],
+                            results: Iterable) -> list:
     return [
         [
             serializer(item)
@@ -42,7 +47,7 @@ def _serialize_data_as_list(fields, results):
     ]
 
 
-def _serialize_data_as_dict(fields, result):
+def _serialize_data_as_dict(fields: Iterable[Field], result: dict) -> dict:
     serialized = {}
 
     for field in fields:
@@ -55,7 +60,7 @@ class BaseCliApp(object):
     name: str
     description: str = ''
 
-    service_cls: BaseAwsService
+    service_cls: Type[BaseAwsService]
 
     # fields for list
     short_fields: tuple
@@ -66,10 +71,10 @@ class BaseCliApp(object):
     # more additional fields for show resource
     detail_fields: tuple = ()
 
-    _service: object
+    _service: BaseAwsService
 
-    def __init__(self):
-        self._service = self.service_cls()  # type: BaseAwsService
+    def __init__(self) -> None:
+        self._service = self.service_cls()
         self._console = Console()
 
         self._list_detail_fields = self.short_fields + self.long_fields
@@ -131,7 +136,7 @@ class BaseCliApp(object):
         except ClientError as e:
             print(e)
 
-    def typer(self):
+    def typer(self) -> Typer:
         app = Typer(name=self.name, help=self.description)
 
         app.command()(self.list)

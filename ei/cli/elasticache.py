@@ -1,4 +1,6 @@
+from typing import Type
 from ei.core.cli import BaseCliApp
+from ei.core.service import BaseAwsService
 from ei.core.fields import Field
 from ei.core.fields import TagField
 from ei.core.fields import DictField
@@ -10,7 +12,7 @@ class ReplicationGroupCliApp(BaseCliApp):
     name: str = 'replicationgroup'
     description: str = 'Elasticache replication group'
 
-    service_cls = AwsElasticacheReplicationGroupService
+    service_cls: Type[BaseAwsService] = AwsElasticacheReplicationGroupService
 
     short_fields = (
         Field('Region'),
@@ -52,7 +54,8 @@ class CacheClusterCliApp(BaseCliApp):
     name: str = 'cachecluster'
     description: str = 'Elasticache cache cluster'
 
-    service_cls = AwsElasticacheCacheClusterService
+    service_cls: Type[AwsElasticacheCacheClusterService] = (
+        AwsElasticacheCacheClusterService)
 
     short_fields = (
         Field('Region'),

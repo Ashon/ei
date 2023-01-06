@@ -1,4 +1,7 @@
+from typing import Type
+
 from ei.core.cli import BaseCliApp
+from ei.core.service import BaseAwsService
 from ei.core.fields import Field
 from ei.core.fields import TagField
 from ei.aws.ec2 import AwsEc2Service
@@ -8,7 +11,7 @@ class Ec2CliApp(BaseCliApp):
     name: str = 'ec2'
     description: str = 'EC2 instance'
 
-    service_cls = AwsEc2Service
+    service_cls: Type[BaseAwsService] = AwsEc2Service
 
     short_fields = (
         Field('Region'),

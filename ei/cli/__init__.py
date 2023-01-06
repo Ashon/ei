@@ -15,7 +15,7 @@ APPS = [
 ]
 
 
-def create_application():
+def create_application() -> typer.Typer:
     cli = typer.Typer()
 
     for app in APPS:

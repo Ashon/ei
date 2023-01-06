@@ -57,3 +57,19 @@ $ aws-vault exec {aws-vault-profile} -- ei ec2 list --all-regions --all-accounts
 
 ...
 ```
+
+## Development
+
+This project controlled by [Hatch](https://github.com/pypa/hatch).
+
+``` sh
+$ pip install hatch
+
+# install package as editable mode
+$ pip install -e .
+
+# testing commands
+$ hatch run lint
+$ hatch run test
+$ hatch run typecheck
+```
