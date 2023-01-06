@@ -1,4 +1,4 @@
-# A`[ei]`
+# A`[ei]`WS CLI
 
 aws cli for humans
 
