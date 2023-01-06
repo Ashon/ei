@@ -1,5 +1,4 @@
 from itertools import chain
-
 from mypy_boto3_ec2 import EC2Client
 
 from ei.aws._base import BaseAwsService
@@ -15,8 +14,9 @@ class AwsEc2Service(BaseAwsService):
             reservation['Instances']
             for reservation in reservations
         ]
+
         instances = chain(*instances)
-        # print(list(instances)[0])
+
         return instances
 
     @classmethod
