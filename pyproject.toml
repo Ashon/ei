@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "ei"
+name = "ei-cli"
 description = 'aws cli for human'
 readme = "README.md"
 requires-python = ">=3.7"

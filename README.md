@@ -4,8 +4,16 @@ aws cli for humans
 
 ## Installation
 
+Install via [pypi](https://pypi.org/project/ei-cli/)
+
 ``` sh
-pip install git+https://github.com/ashon/ei@0.0.6
+pip install ei-cli
+```
+
+Install via github
+
+``` sh
+pip install git+https://github.com/ashon/ei@0.0.7
 ```
 
 ## Configuration

@@ -4,3 +4,4 @@
 .coverage
 *.py[c|o]
 **/__pycache__
+dist
