@@ -1,3 +1,4 @@
+.vscode
 .env
 .python-version
 *.py[c|o]
