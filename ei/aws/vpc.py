@@ -1,4 +1,4 @@
-from ei.fixtures import vpc
+from ei.aws.fixtures import vpc
 
 
 def list():

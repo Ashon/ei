@@ -3,6 +3,19 @@ from ei.cli import ec2
 from ei.cli import vpc
 
 
-cli = typer.Typer()
-cli.add_typer(ec2.app)
-cli.add_typer(vpc.app)
+APPS = [
+    ec2.app,
+    vpc.app
+]
+
+
+def main():
+    cli = typer.Typer()
+
+    for app in APPS:
+        cli.add_typer(app)
+
+    return cli
+
+
+cli = main()
