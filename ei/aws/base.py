@@ -1,4 +1,5 @@
 from typing import Any
+from typing import List
 from typing import Callable
 
 from ei.aws import defaults
@@ -9,7 +10,7 @@ class BaseAwsService(object):
     service_name: str
 
     @classmethod
-    def _list(cls, client: object) -> list[dict]:
+    def _list(cls, client: object) -> List[dict]:
         """List diapatcher using client
 
         Should returns aws resource list
@@ -68,7 +69,7 @@ class BaseAwsService(object):
         return result
 
     @classmethod
-    def list(cls, region: str, account_id: str) -> list[dict]:
+    def list(cls, region: str, account_id: str) -> List[dict]:
         region, account_id = cls._defaulting_args(region, account_id)
         result = cls._dispatch(
             cls._list, region=region, account_id=account_id)

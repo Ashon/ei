@@ -20,7 +20,7 @@ class AwsEc2Service(BaseAwsService):
         return instances
 
     @classmethod
-    def _show(cls, client: EC2Client, id: str) -> dict:
+    def _show(cls, client: EC2Client, id: str) -> list[dict]:
         reservations = client.describe_instances(
             InstanceIds=[id]
         )['Reservations']

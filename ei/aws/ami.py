@@ -14,6 +14,7 @@ class AwsAmiService(BaseAwsService):
         return images
 
     @classmethod
-    def _show(cls, client: EC2Client, id: str) -> dict:
+    def _show(cls, client: EC2Client, id: str) -> list[dict]:
         image = client.describe_images(ImageIds=[id])['Images']
+
         return image

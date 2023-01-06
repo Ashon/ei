@@ -11,5 +11,5 @@ class AwsVpcService(BaseAwsService):
         return client.describe_vpcs()['Vpcs']
 
     @classmethod
-    def _show(cls, client: EC2Client, id: str) -> dict:
+    def _show(cls, client: EC2Client, id: str) -> list[dict]:
         return client.describe_vpcs(VpcIds=[id])['Vpcs']
