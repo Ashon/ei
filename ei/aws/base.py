@@ -40,7 +40,7 @@ class BaseAwsService(object):
 
             result = fn(client, *args, **kwargs)
             result = [
-                {'Region': region, **obj}
+                {'Region': region, 'Account': account_id, **obj}
                 for obj in result
             ]
 

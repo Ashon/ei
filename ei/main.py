@@ -8,8 +8,8 @@ from ei.aws import defaults
 
 
 APPS = [
-    ec2.app,
-    vpc.app
+    ec2.Ec2CliApp,
+    vpc.VpcCliApp
 ]
 
 
@@ -35,7 +35,8 @@ def main():
     cli = typer.Typer()
 
     for app in APPS:
-        cli.add_typer(app)
+        obj = app()
+        cli.add_typer(obj.typer())
 
     return cli
 

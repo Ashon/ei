@@ -1,6 +1,6 @@
 def serialize_data_as_list(headers, results):
     return [
-        [k[1](v[k[0]]) for k in headers] for v in results
+        [k[1](v.get(k[0], '')) for k in headers] for v in results
     ]
 
 

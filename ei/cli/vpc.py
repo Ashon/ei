@@ -23,6 +23,3 @@ class VpcCliApp(BaseCliApp):
         ('CidrBlockAssociationSet', serialize_dict_list),
         ('Tags', serialize_tags)
     )
-
-
-app = VpcCliApp().typer()
