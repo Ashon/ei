@@ -26,7 +26,10 @@ classifiers = [
 
 dependencies = [
   "typer==0.7.0",
-  "boto3==1.26.42"
+  "boto3==1.26.42",
+  "rich==13.0.0",
+  "mypy-boto3==1.26.42",
+  "mypy-boto3-ec2==1.26.34"
 ]
 
 dynamic = ["version"]
