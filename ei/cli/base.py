@@ -17,12 +17,16 @@ class BaseCliApp(object):
 
     short_fields: tuple
     long_fields: tuple
+    detail_fields: tuple = ()
 
     _service: object
 
     def __init__(self):
         self._service = self.service_cls()  # type: BaseAwsService
         self._console = Console()
+
+        self._list_detail_fields = self.short_fields + self.long_fields
+        self._full_fields = self._list_detail_fields + self.detail_fields
 
     def list(
             self,
@@ -33,7 +37,7 @@ class BaseCliApp(object):
             all_accounts: bool = False) -> None:
 
         if long:
-            headers = self.short_fields + self.long_fields
+            headers = self._list_detail_fields
         else:
             headers = self.short_fields
 
@@ -66,7 +70,7 @@ class BaseCliApp(object):
         try:
             result = self._service.show(id, region, account_id)
             serialized_result = serialize_data_as_dict(
-                self.short_fields + self.long_fields, result)
+                self._full_fields, result)
 
             table = detail_table(serialized_result)
             self._console.print(table)
