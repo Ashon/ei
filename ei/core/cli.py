@@ -83,6 +83,7 @@ class BaseCliApp(object):
     def list(
             self,
             long: bool = False,
+            stat: bool = True,
             region: str = '',
             account_id: str = '',
             all_regions: bool = False,
@@ -113,8 +114,10 @@ class BaseCliApp(object):
                 field._name for field in fields
             ], serialized_results)
             self._console.print(table)
-            self._console.print(
-                f'{len(serialized_results)} "{self.name}" items.')
+
+            if stat:
+                self._console.print(
+                    f'{len(serialized_results)} "{self.name}" items.')
 
         except ClientError as e:
             print(e)
