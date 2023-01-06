@@ -33,7 +33,8 @@ class Field(object):
         if serializer:
             self.serialize = serializer
         else:
-            self.serialize = _serialize
+            if not hasattr(self, 'serialize'):
+                self.serialize = _serialize
 
     def __repr__(self) -> str:
         return (
