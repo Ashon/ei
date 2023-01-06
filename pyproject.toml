@@ -23,7 +23,12 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = []
+
+dependencies = [
+  "typer==0.7.0",
+  "boto3==1.26.42"
+]
+
 dynamic = ["version"]
 
 [project.urls]
