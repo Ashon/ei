@@ -4,6 +4,7 @@ from ei.core.cli import BaseCliApp
 from ei.core.service import BaseAwsService
 from ei.core.fields import Field
 from ei.core.fields import TagField
+from ei.core.fields import extract_from_tag
 from ei.aws.ec2 import AwsEc2Service
 
 
@@ -17,10 +18,7 @@ class Ec2CliApp(BaseCliApp):
         Field('Region'),
         Field('Account'),
         Field('InstanceId'),
-        Field('Name', serializer=lambda record, raw_value: [
-            tag['Value'] for tag in record['Tags']
-            if tag['Key'] == 'Name'
-        ][0]),
+        Field('Name', serializer=extract_from_tag('Name')),
         Field('ImageId'),
         Field('InstanceType'),
         Field('PrivateIpAddress'),

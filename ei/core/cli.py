@@ -113,6 +113,8 @@ class BaseCliApp(object):
                 field._name for field in fields
             ], serialized_results)
             self._console.print(table)
+            self._console.print(
+                f'{len(serialized_results)} "{self.name}" items.')
 
         except ClientError as e:
             print(e)

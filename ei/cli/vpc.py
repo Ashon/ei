@@ -2,6 +2,7 @@ from ei.core.cli import BaseCliApp
 from ei.core.fields import Field
 from ei.core.fields import TagField
 from ei.core.fields import DictField
+from ei.core.fields import extract_from_tag
 from ei.aws.vpc import AwsVpcService
 
 
@@ -15,10 +16,7 @@ class VpcCliApp(BaseCliApp):
         Field('Region'),
         Field('Account'),
         Field('VpcId'),
-        Field('Name', serializer=lambda record, raw_value: [
-            tag['Value'] for tag in record['Tags']
-            if tag['Key'] == 'Name'
-        ][0]),
+        Field('Name', serializer=extract_from_tag('Name')),
         Field('InstanceTenancy'),
         Field('IsDefault'),
         Field('State'),

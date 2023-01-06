@@ -7,6 +7,22 @@ def _serialize(record: Any, raw_value: Any) -> Any:
     return str(raw_value)
 
 
+def extract_from_tag(key: str):
+    def _serialize(record: Any, raw_value: Any):
+        if record.get('Tags'):
+            found_tag = [
+                tag['Value'] for tag in record['Tags']
+                if tag['Key'] == key
+            ]
+
+            if found_tag:
+                return found_tag[0]
+
+        return ''
+
+    return _serialize
+
+
 class Field(object):
     _name: str
     serialize: Callable[[Any, Any], str]
@@ -18,6 +34,11 @@ class Field(object):
             self.serialize = serializer
         else:
             self.serialize = _serialize
+
+    def __repr__(self) -> str:
+        return (
+            f'<{self.__class__.__name__}@{self.__hash__()}: "{self._name}" >'
+        )
 
     def __call__(self, record: Any) -> str:
         raw_value = record.get(self._name, '')
