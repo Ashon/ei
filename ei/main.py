@@ -19,7 +19,7 @@ def main():
 
     except defaults.PreflightError:
         print('Check environment variables')
-
+        print()
         print(f'{defaults.EI_ACCOUNT_IDS=}')
         print(f'{defaults.EI_REGIONS=}')
         print(f'{defaults.EI_ASSUME_ROLE_ARN_PATTERN=}')
