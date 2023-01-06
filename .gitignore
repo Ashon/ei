@@ -1,0 +1,4 @@
+.env
+.python-version
+*.py[c|o]
+**/__pycache__
