@@ -5,7 +5,7 @@ aws cli for humans
 ## Installation
 
 ``` sh
-pip install git+https://github.com/ashon/ei@0.0.2
+pip install git+https://github.com/ashon/ei@0.0.3
 ```
 
 ## Configuration
