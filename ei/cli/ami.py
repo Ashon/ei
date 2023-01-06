@@ -6,6 +6,8 @@ from ei.core.field_serializers import serialize_tags
 
 class AmiCliApp(BaseCliApp):
     name: str = 'ami'
+    description: str = 'EC2 AMI'
+
     service_cls = AwsAmiService
 
     short_fields = (

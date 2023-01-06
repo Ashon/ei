@@ -38,6 +38,8 @@ def _preflight():
 
 class BaseCliApp(object):
     name: str
+    description: str = ''
+
     service_cls: BaseAwsService
 
     # fields for list
@@ -113,7 +115,7 @@ class BaseCliApp(object):
             print(e)
 
     def typer(self):
-        app = Typer(name=self.name)
+        app = Typer(name=self.name, help=self.description)
 
         app.command()(self.list)
         app.command()(self.show)

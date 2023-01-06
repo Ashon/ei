@@ -7,6 +7,8 @@ from ei.core.field_serializers import serialize_dict_list
 
 class ReplicationGroupCliApp(BaseCliApp):
     name: str = 'replicationgroup'
+    description: str = 'Elasticache replication group'
+
     service_cls = AwsElasticacheReplicationGroupService
 
     short_fields = (
@@ -47,6 +49,8 @@ class ReplicationGroupCliApp(BaseCliApp):
 
 class CacheClusterCliApp(BaseCliApp):
     name: str = 'cachecluster'
+    description: str = 'Elasticache cache cluster'
+
     service_cls = AwsElasticacheCacheClusterService
 
     short_fields = (

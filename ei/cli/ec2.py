@@ -6,6 +6,8 @@ from ei.core.field_serializers import serialize_tags
 
 class Ec2CliApp(BaseCliApp):
     name: str = 'ec2'
+    description: str = 'EC2 instance'
+
     service_cls = AwsEc2Service
 
     short_fields = (

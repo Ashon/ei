@@ -6,6 +6,8 @@ from ei.core.field_serializers import serialize_dict_list
 
 class VpcCliApp(BaseCliApp):
     name: str = 'vpc'
+    description: str = 'EC2 VPC'
+
     service_cls = AwsVpcService
 
     short_fields = (
