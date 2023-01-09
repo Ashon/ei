@@ -1,4 +1,4 @@
-from ei.cli import create_application
+from ei.core.applications import create_application
 
 
 cli = create_application()

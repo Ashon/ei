@@ -4,7 +4,7 @@ from ei.core.fields import IDField
 from ei.core.fields import TagField
 from ei.core.fields import DictField
 from ei.core.fields import extract_from_tag
-from ei.aws.vpc import AwsVpcService
+from ei.services.aws.vpc import AwsVpcService
 
 
 class VpcCliApp(BaseCliApp):

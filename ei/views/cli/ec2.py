@@ -7,7 +7,7 @@ from ei.core.fields import IDField
 from ei.core.fields import TagField
 from ei.core.fields import DictField
 from ei.core.fields import extract_from_tag
-from ei.aws.ec2 import AwsEc2Service
+from ei.services.aws.ec2 import AwsEc2Service
 
 
 class Ec2CliApp(BaseCliApp):

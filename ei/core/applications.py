@@ -1,9 +1,9 @@
 import typer
 
-from ei.cli import ami
-from ei.cli import ec2
-from ei.cli import elasticache
-from ei.cli import vpc
+from ei.views.cli import ami
+from ei.views.cli import ec2
+from ei.views.cli import elasticache
+from ei.views.cli import vpc
 
 
 APPS = [
@@ -23,6 +23,3 @@ def create_application() -> typer.Typer:
         cli.add_typer(obj.typer())
 
     return cli
-
-
-__all__ = ['create_application']

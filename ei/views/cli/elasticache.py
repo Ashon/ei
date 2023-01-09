@@ -5,8 +5,8 @@ from ei.core.fields import Field
 from ei.core.fields import IDField
 from ei.core.fields import TagField
 from ei.core.fields import DictField
-from ei.aws.elasticache import AwsElasticacheReplicationGroupService
-from ei.aws.elasticache import AwsElasticacheCacheClusterService
+from ei.services.aws.elasticache import AwsElasticacheReplicationGroupService
+from ei.services.aws.elasticache import AwsElasticacheCacheClusterService
 
 
 class ReplicationGroupCliApp(BaseCliApp):
