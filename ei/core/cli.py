@@ -1,4 +1,5 @@
 import typing
+from collections import defaultdict
 from typing import List
 from typing import Type
 from typing import Iterable
@@ -22,6 +23,9 @@ from ei.core.table import detail_table
 
 if typing.TYPE_CHECKING:
     from typing import Callable  # noqa: F401
+
+
+SUBJECTS = ['Region', 'Account']
 
 
 def create_application(apps: List['Typeable']) -> Typer:
@@ -133,6 +137,7 @@ class BaseCliApp(Typeable):
             self,
             long: bool = False,
             stat: bool = True,
+            table: bool = True,
             region: str = '',
             account_id: str = '',
             all_regions: bool = False,
@@ -169,18 +174,32 @@ class BaseCliApp(Typeable):
 
         display_fields = additional_fields + [*fields]
         try:
-            results = bulk_action(self._service.list, regions, account_ids)
+            results = [*bulk_action(self._service.list, regions, account_ids)]
             serialized_results = _serialize_data_as_list(
                 display_fields, results)
 
-            table = list_table([
-                field._name for field in display_fields
-            ], serialized_results)
-            self._console.print(table)
+            if table:
+                display_table = list_table([
+                    field._name for field in display_fields
+                ], serialized_results)
+                self._console.print(display_table)
 
             if stat:
+                stats_dict: dict = {}
+                for subject in SUBJECTS:
+                    stats_dict[subject] = defaultdict(int)
+
+                    for item in results:
+                        stats_dict[subject][item[subject]] += 1
+
                 self._console.print(
                     f'{len(serialized_results)} "{self.name}" items.')
+
+                for subject in SUBJECTS:
+                    self._console.print(f'\n* per {subject}')
+                    for key, count in stats_dict[subject].items():
+                        self._console.print(
+                            f'  - "{key}": {count} items.')
 
         except ClientError as e:
             print(e)
