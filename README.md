@@ -2,6 +2,9 @@
 
 aws cli for humans
 
+[![CI](https://github.com/Ashon/ei/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Ashon/ei/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/Ashon/ei/branch/main/graph/badge.svg?token=HSW2NN23BY)](https://codecov.io/gh/Ashon/ei)
+
 ## Installation
 
 Install via [pypi](https://pypi.org/project/ei-cli/)
