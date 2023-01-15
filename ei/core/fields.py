@@ -55,6 +55,12 @@ class IDField(Field):
         return f'[bold]{raw_value}[/bold]'
 
 
+class BooleanField(Field):
+    def serialize(self, record: Any, raw_value: Any) -> str:
+        color = 'green' if raw_value is True else 'red'
+        return f'[{color}]{raw_value}[/{color}]'
+
+
 class TagField(Field):
     def serialize(self, record: Any, raw_value: Any) -> str:
         if not raw_value:

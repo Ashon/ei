@@ -3,6 +3,7 @@ from ei.core.cli import BaseCliApp
 from ei.core.service import BaseAwsService
 from ei.core.fields import Field
 from ei.core.fields import IDField
+from ei.core.fields import BooleanField
 from ei.core.fields import TagField
 from ei.core.fields import DictField
 from ei.services.aws.elasticache import AwsElasticacheReplicationGroupService
@@ -22,15 +23,15 @@ class ReplicationGroupCliApp(BaseCliApp):
         Field('Status'),
         Field('AutomaticFailover'),
         Field('MultiAZ'),
-        Field('ClusterEnabled'),
+        BooleanField('ClusterEnabled'),
         Field('CacheNodeType'),
     )
 
     long_fields = (
-        Field('AuthTokenEnabled'),
-        Field('TransitEncryptionEnabled'),
-        Field('AtRestEncryptionEnabled'),
-        Field('AutoMinorVersionUpgrade'),
+        BooleanField('AuthTokenEnabled'),
+        BooleanField('TransitEncryptionEnabled'),
+        BooleanField('AtRestEncryptionEnabled'),
+        BooleanField('AutoMinorVersionUpgrade'),
         Field('ReplicationGroupCreateTime'),
         Field('SnapshotWindow'),
         Field('SnapshotRetentionLimit'),
@@ -80,11 +81,11 @@ class CacheClusterCliApp(BaseCliApp):
 
     detail_fields = (
         Field('ARN'),
-        Field('AuthTokenEnabled'),
-        Field('TransitEncryptionEnabled'),
-        Field('AtRestEncryptionEnabled'),
-        Field('AutoMinorVersionUpgrade'),
-        Field('ReplicationGroupLogDeliveryEnabled'),
+        BooleanField('AuthTokenEnabled'),
+        BooleanField('TransitEncryptionEnabled'),
+        BooleanField('AtRestEncryptionEnabled'),
+        BooleanField('AutoMinorVersionUpgrade'),
+        BooleanField('ReplicationGroupLogDeliveryEnabled'),
         Field('NetworkType'),
         Field('IpDiscovery'),
         Field('SnapshotRetentionLimit'),

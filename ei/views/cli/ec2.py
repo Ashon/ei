@@ -4,6 +4,7 @@ from ei.core.cli import BaseCliApp
 from ei.core.service import BaseAwsService
 from ei.core.fields import Field
 from ei.core.fields import IDField
+from ei.core.fields import BooleanField
 from ei.core.fields import TagField
 from ei.core.fields import DictField
 from ei.core.fields import extract_from_tag
@@ -43,8 +44,8 @@ class Ec2CliApp(BaseCliApp):
         Field('PublicDnsName'),
         Field('StateTransitionReason'),
         Field('ClientToken'),
-        Field('EbsOptimized'),
-        Field('EnaSupport'),
+        BooleanField('EbsOptimized'),
+        BooleanField('EnaSupport'),
         DictField('Placement'),
         DictField('BlockDeviceMappings'),
         DictField('MaintenanceOptions'),
@@ -54,7 +55,7 @@ class Ec2CliApp(BaseCliApp):
         Field('RootDeviceName'),
         Field('RootDeviceType'),
         DictField('SecurityGroups'),
-        Field('SourceDestCheck'),
+        BooleanField('SourceDestCheck'),
         Field('VirtualizationType'),
         DictField('CpuOptions'),
         DictField('CapacityReservationSpecification'),
