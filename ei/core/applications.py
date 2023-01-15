@@ -3,11 +3,13 @@ import typer
 from ei.core.cli import Typeable
 from ei.views.cli import ec2
 from ei.views.cli import elasticache
+from ei.views.cli import rds
 
 
 APPS = [
     ec2.group,
     elasticache.group,
+    rds.group,
 ]
 
 
