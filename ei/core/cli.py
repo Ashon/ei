@@ -55,7 +55,12 @@ def _serialize_data_as_dict(fields: Iterable[Field], result: dict) -> dict:
     return serialized
 
 
-class BaseCliApp(object):
+class Typeable(object):
+    def typer(self) -> Typer:
+        raise NotImplementedError()
+
+
+class BaseCliApp(Typeable):
     name: str
     description: str = ''
 
@@ -162,3 +167,26 @@ class BaseCliApp(object):
         app.command()(self.show)
 
         return app
+
+
+class CliGroup(Typeable):
+    name: str
+    description: str
+
+    apps: list[Type[BaseCliApp]]
+
+    def __init__(self, name: str, description: str) -> None:
+        self.name = name
+        self.description = description
+        self.apps = []
+
+    def app(self, cls: Type[BaseCliApp]) -> None:
+        self.apps.append(cls)
+
+    def typer(self) -> Typer:
+        group = Typer(name=self.name, help=self.description)
+        for sub in self.apps:
+            app = sub()
+            group.add_typer(app.typer())
+
+        return group

@@ -1,19 +1,13 @@
 import typer
 
-from ei.views.cli import ami
+from ei.core.cli import Typeable
 from ei.views.cli import ec2
 from ei.views.cli import elasticache
-from ei.views.cli import subnet
-from ei.views.cli import vpc
 
 
 APPS = [
-    ec2.Ec2CliApp,
-    ami.AmiCliApp,
-    subnet.SubnetCliApp,
-    vpc.VpcCliApp,
-    elasticache.ReplicationGroupCliApp,
-    elasticache.CacheClusterCliApp,
+    ec2.group,
+    elasticache.group,
 ]
 
 
@@ -21,7 +15,7 @@ def create_application() -> typer.Typer:
     cli = typer.Typer(help='A[ei] - AWS CLI for humans.')
 
     for app in APPS:
-        obj = app()
-        cli.add_typer(obj.typer())
+        assert isinstance(app, Typeable)
+        cli.add_typer(app.typer())
 
     return cli

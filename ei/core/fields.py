@@ -10,13 +10,13 @@ def _serialize(record: Any, raw_value: Any) -> Any:
     return str(raw_value)
 
 
-def extract_from_tag(key: str):
-    def _serialize(record: Any, raw_value: Any):
+def extract_from_tag(key: str) -> Callable:
+    def _serialize(record: Any, raw_value: Any) -> str:
         if record.get('Tags'):
             found_tag = [
                 tag['Value'] for tag in record['Tags']
                 if tag['Key'] == key
-            ]
+            ]  # type: list[str]
 
             if found_tag:
                 return found_tag[0]

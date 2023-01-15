@@ -1,5 +1,6 @@
 from typing import Type
 from ei.core.cli import BaseCliApp
+from ei.core.cli import CliGroup
 from ei.core.service import BaseAwsService
 from ei.core.fields import Field
 from ei.core.fields import IDField
@@ -10,6 +11,10 @@ from ei.services.aws.elasticache import AwsElasticacheReplicationGroupService
 from ei.services.aws.elasticache import AwsElasticacheCacheClusterService
 
 
+group = CliGroup(name='elasticache', description='AWS Elasticache')
+
+
+@group.app
 class ReplicationGroupCliApp(BaseCliApp):
     name: str = 'replicationgroup'
     description: str = 'Elasticache replication group'
@@ -52,6 +57,7 @@ class ReplicationGroupCliApp(BaseCliApp):
     )
 
 
+@group.app
 class CacheClusterCliApp(BaseCliApp):
     name: str = 'cachecluster'
     description: str = 'Elasticache cache cluster'
