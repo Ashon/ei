@@ -111,6 +111,8 @@ class BaseCliApp(Typeable):
             account_id: str = '',
             all_regions: bool = False,
             all_accounts: bool = False) -> None:
+        """List resources
+        """
 
         _preflight()
         self._validate_region(region)
@@ -150,6 +152,8 @@ class BaseCliApp(Typeable):
             id: str,
             region: str = '',
             account_id: str = '') -> None:
+        """Show resource
+        """
 
         _preflight()
         self._validate_region(region)
@@ -171,12 +175,17 @@ class BaseCliApp(Typeable):
             self.show
         ]  # type: list[Callable]
         available_commands = ', '.join([
-            f'{cmd.__name__}' for cmd in commands
+            f'[bright_blue]{cmd.__name__}[/bright_blue]'
+            for cmd in commands
         ])
 
         app = Typer(
             name=self.name,
-            help=f'{self.description} - (available: {available_commands})'
+            help=(
+                f'{self.description} [bright_black]'
+                f'(subcommands: {available_commands})'
+                '[/bright_black]'
+            )
         )
 
         for cmd in commands:
@@ -201,12 +210,17 @@ class CliGroup(Typeable):
 
     def typer(self) -> Typer:
         group_description = ', '.join([
-            f'{app.name}' for app in self.apps
+            f'[bright_blue]{app.name}[/bright_blue]'
+            for app in self.apps
         ])
 
         group = Typer(
             name=self.name,
-            help=f'{self.description} - (available: {group_description})'
+            help=(
+                f'{self.description} [bright_black]'
+                f'(subcommands: {group_description})'
+                '[/bright_black]'
+            )
         )
         for sub in self.apps:
             app = sub()

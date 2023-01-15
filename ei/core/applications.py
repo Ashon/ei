@@ -14,7 +14,13 @@ APPS = [
 
 
 def create_application() -> typer.Typer:
-    cli = typer.Typer(help='A[ei] - AWS CLI for humans.')
+    cli = typer.Typer(
+        help=(
+            'A[bold green](ei)[/bold green]'
+            ' - AWS CLI for humans.'
+        ),
+        rich_markup_mode='rich'
+    )
 
     for app in APPS:
         assert isinstance(app, Typeable)
