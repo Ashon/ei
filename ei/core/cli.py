@@ -22,6 +22,19 @@ if typing.TYPE_CHECKING:
     from typing import Callable  # noqa: F401
 
 
+def create_application(apps: list['Typeable']) -> Typer:
+    cli = CliGroup(
+        name='ei',
+        description=(
+            'A[bold green](ei)[/bold green]'
+            ' - AWS CLI for humans.'
+        ),
+        apps=apps
+    )
+
+    return cli.typer()
+
+
 def _get_typer(name: str, help: str) -> Typer:
     app = Typer(
         name=name,

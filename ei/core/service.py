@@ -1,3 +1,4 @@
+from contextlib import _GeneratorContextManager
 from typing import Any
 from typing import List
 from typing import Callable
@@ -10,6 +11,7 @@ from ei.core.session import client_session
 
 class BaseAwsService(object):
     service_name: str
+    _sessioncontext: Callable[..., _GeneratorContextManager] = client_session
 
     @classmethod
     def _list(cls, client: BaseClient) -> Any:
@@ -58,7 +60,7 @@ class BaseAwsService(object):
 
         result = None
 
-        with client_session(
+        with cls._sessioncontext(
                 account_id=account_id, region=region,
                 service_name=cls.service_name) as client:
 
