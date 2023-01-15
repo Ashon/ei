@@ -13,7 +13,7 @@ pip install ei-cli
 Install via github
 
 ``` sh
-pip install git+https://github.com/ashon/ei@0.0.9
+pip install git+https://github.com/ashon/ei@0.0.10
 ```
 
 ## Configuration
