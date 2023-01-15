@@ -9,6 +9,7 @@ from ei.core.fields import BooleanField
 from ei.core.fields import TagField
 from ei.core.fields import DictField
 from ei.core.fields import extract_from_tag
+from ei.core.fields import extract
 from ei.services.aws.ec2 import AwsEc2VpcService
 from ei.services.aws.ec2 import AwsEc2SubnetService
 from ei.services.aws.ec2 import AwsEc2InstanceService
@@ -98,7 +99,7 @@ class Ec2Instance(BaseCliApp):
         Field('ImageId'),
         Field('InstanceType'),
         Field('PrivateIpAddress'),
-        Field('State', serializer=lambda record, raw_value: raw_value['Name']),
+        Field('State', serializer=extract('Name')),
         Field('VpcId'),
     )
 

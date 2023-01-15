@@ -10,6 +10,14 @@ def _serialize(record: Any, raw_value: Any) -> Any:
     return str(raw_value)
 
 
+def extract(key: str) -> Callable:
+    def _serialize(record: Any, raw_value: Any) -> str:
+        value = raw_value.get(key, '')
+        return str(value)
+
+    return _serialize
+
+
 def extract_from_tag(key: str) -> Callable:
     def _serialize(record: Any, raw_value: Any) -> str:
         if record.get('Tags'):
