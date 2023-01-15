@@ -3,12 +3,14 @@ import typer
 from ei.views.cli import ami
 from ei.views.cli import ec2
 from ei.views.cli import elasticache
+from ei.views.cli import subnet
 from ei.views.cli import vpc
 
 
 APPS = [
     ec2.Ec2CliApp,
     ami.AmiCliApp,
+    subnet.SubnetCliApp,
     vpc.VpcCliApp,
     elasticache.ReplicationGroupCliApp,
     elasticache.CacheClusterCliApp,
