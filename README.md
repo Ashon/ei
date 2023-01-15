@@ -16,7 +16,7 @@ pip install ei-cli
 Install via github
 
 ``` sh
-pip install git+https://github.com/ashon/ei@0.0.11
+pip install git+https://github.com/ashon/ei
 ```
 
 ## Configuration
@@ -44,27 +44,16 @@ AWS_SESSION_EXPIRATION=None
 
 ## Run
 
-``` sh
-$ ei --help
-
-# ec2 commands
-$ ei ec2 list
-$ ei ec2 show {instance-id}
-
-# vpc commands
-$ ei vpc list
-$ ei vpc show {vpc-id}
-```
+![ei](assets/ei.png)
 
 Using aws-vault for cross account, region resource retrieving.
 
 ```
-
 # list vpcs across all regions, and all accounts ($EI_REGIONS, $EI_ACCOUNT_IDS)
-$ aws-vault exec {aws-vault-profile} -- ei vpc list --all-regions --all-accounts
+$ aws-vault exec {aws-vault-profile} -- ei ec2 vpc list --all-regions --all-accounts
 
 # same as ec2
-$ aws-vault exec {aws-vault-profile} -- ei ec2 list --all-regions --all-accounts
+$ aws-vault exec {aws-vault-profile} -- ei ec2 instance list --all-regions --all-accounts
 
 ...
 ```

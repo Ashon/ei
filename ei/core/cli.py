@@ -7,6 +7,7 @@ from typer import Typer
 from rich.console import Console
 from botocore.exceptions import ClientError
 
+from ei.__about__ import VERSION
 from ei.core import defaults
 from ei.core.fields import Field
 from ei.core.service import BaseAwsService
@@ -27,7 +28,7 @@ def create_application(apps: list['Typeable']) -> Typer:
         name='ei',
         description=(
             'A[bold green](ei)[/bold green]'
-            ' - AWS CLI for humans.'
+            f' - AWS CLI for humans. ({VERSION})\n\n'
         ),
         apps=apps
     )
