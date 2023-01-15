@@ -9,10 +9,10 @@ log '[1/4] Install dependencies'
 pip install -e '.[devel]'
 
 log "[2/4] Lint"
-hatch run lint
+hatch run test:lint
 
 log "[3/4] TypeChecking"
-hatch run typecheck
+hatch run test:typecheck
 
 log "[4/4] UnitTest"
-hatch run test
+hatch run test:test

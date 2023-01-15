@@ -15,7 +15,7 @@ def test_create_application() -> None:
         ec2.group,
         elasticache.group,
         rds.group
-    ]  # type: list[Typeable]
+    ]  # type: typing.List[Typeable]
 
     create_application(apps)
 

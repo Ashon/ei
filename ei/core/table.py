@@ -1,3 +1,6 @@
+from typing import Dict
+from typing import List
+
 from rich import box
 from rich.table import Table
 
@@ -5,7 +8,7 @@ from rich.table import Table
 DETAIL_FIELDS = ['key', 'value']
 
 
-def list_table(fields: list[str], items: list) -> Table:
+def list_table(fields: List[str], items: List) -> Table:
     table = Table(*fields, box=box.ROUNDED)
 
     for item in items:
@@ -14,7 +17,7 @@ def list_table(fields: list[str], items: list) -> Table:
     return table
 
 
-def detail_table(item: dict) -> Table:
+def detail_table(item: Dict) -> Table:
     table = Table(*DETAIL_FIELDS, box=box.ROUNDED)
 
     for key, value in item.items():

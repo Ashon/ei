@@ -1,9 +1,13 @@
+import typing
 from typing import Any
 from typing import Callable
 from typing import Optional
 from typing import Collection
 
 from rich.pretty import pretty_repr
+
+if typing.TYPE_CHECKING:
+    from typing import List  # noqa: F401
 
 
 def _serialize(record: Any, raw_value: Any) -> Any:
@@ -24,7 +28,7 @@ def extract_from_tag(key: str) -> Callable:
             found_tag = [
                 tag['Value'] for tag in record['Tags']
                 if tag['Key'] == key
-            ]  # type: list[str]
+            ]  # type: List[str]
 
             if found_tag:
                 return found_tag[0]

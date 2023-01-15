@@ -14,7 +14,7 @@ APPS = [
     ec2.group,
     elasticache.group,
     rds.group,
-]  # type: list[Typeable]
+]  # type: typing.List[Typeable]
 
 
 cli = create_application(APPS)

@@ -1,4 +1,5 @@
 import typing
+from typing import List
 from typing import Type
 from typing import Iterable
 from typing import Optional
@@ -23,7 +24,7 @@ if typing.TYPE_CHECKING:
     from typing import Callable  # noqa: F401
 
 
-def create_application(apps: list['Typeable']) -> Typer:
+def create_application(apps: List['Typeable']) -> Typer:
     cli = CliGroup(
         name='ei',
         description=(
@@ -205,7 +206,7 @@ class BaseCliApp(Typeable):
         commands = [
             self.list,
             self.show
-        ]  # type: list[Callable]
+        ]  # type: List[Callable]
         available_commands = ', '.join([
             f'[bright_blue]{cmd.__name__}[/bright_blue]'
             for cmd in commands
@@ -227,13 +228,13 @@ class BaseCliApp(Typeable):
 
 
 class CliGroup(Typeable):
-    _apps: list[Typeable]
+    _apps: List[Typeable]
 
     def __init__(
             self,
             name: str,
             description: str,
-            apps: Optional[list[Typeable]] = None
+            apps: Optional[List[Typeable]] = None
             ) -> None:
 
         self.name = name
