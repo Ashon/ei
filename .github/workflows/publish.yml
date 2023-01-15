@@ -1,4 +1,4 @@
-name: Release
+name: Publish
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
     - "*.*.*"
 
 jobs:
-  release:
+  publish:
     runs-on: ubuntu-20.04
 
     steps:
@@ -16,8 +16,8 @@ jobs:
         python-version: '3.11'
         cache: 'pip'
 
-    - name: build & release
-      run: ./scripts/release.sh
+    - name: build & publish
+      run: ./scripts/publish.sh
       env:
         HATCH_INDEX_USER: __token__
         HATCH_INDEX_AUTH: ${{ secrets.PYPI_TOKEN }}
