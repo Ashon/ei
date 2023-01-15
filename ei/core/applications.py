@@ -1,29 +1,32 @@
+import typing
+
 import typer
 
-from ei.core.cli import Typeable
+from ei.core.cli import CliGroup
 from ei.views.cli import ec2
 from ei.views.cli import elasticache
 from ei.views.cli import rds
+
+
+if typing.TYPE_CHECKING:
+    from ei.core.cli import Typeable  # noqa: F401
 
 
 APPS = [
     ec2.group,
     elasticache.group,
     rds.group,
-]
+]  # type: list[Typeable]
 
 
 def create_application() -> typer.Typer:
-    cli = typer.Typer(
-        help=(
+    cli = CliGroup(
+        name='ei',
+        description=(
             'A[bold green](ei)[/bold green]'
             ' - AWS CLI for humans.'
         ),
-        rich_markup_mode='rich'
+        apps=APPS
     )
 
-    for app in APPS:
-        assert isinstance(app, Typeable)
-        cli.add_typer(app.typer())
-
-    return cli
+    return cli.typer()

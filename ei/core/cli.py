@@ -1,6 +1,7 @@
 import typing
 from typing import Type
 from typing import Iterable
+from typing import Optional
 
 from typer import Typer
 from rich.console import Console
@@ -19,6 +20,16 @@ from ei.core.table import detail_table
 
 if typing.TYPE_CHECKING:
     from typing import Callable  # noqa: F401
+
+
+def _get_typer(name: str, help: str) -> Typer:
+    app = Typer(
+        name=name,
+        help=help,
+        no_args_is_help=True,
+        rich_markup_mode='rich',
+    )
+    return app
 
 
 def _preflight() -> None:
@@ -61,14 +72,14 @@ def _serialize_data_as_dict(fields: Iterable[Field], result: dict) -> dict:
 
 
 class Typeable(object):
+    name: str
+    description: str = ''
+
     def typer(self) -> Typer:
         raise NotImplementedError()
 
 
 class BaseCliApp(Typeable):
-    name: str
-    description: str = ''
-
     service_cls: Type[BaseAwsService]
 
     # fields for list
@@ -179,7 +190,7 @@ class BaseCliApp(Typeable):
             for cmd in commands
         ])
 
-        app = Typer(
+        app = _get_typer(
             name=self.name,
             help=(
                 f'{self.description} [bright_black]'
@@ -195,26 +206,37 @@ class BaseCliApp(Typeable):
 
 
 class CliGroup(Typeable):
-    name: str
-    description: str
+    _apps: list[Typeable]
 
-    apps: list[Type[BaseCliApp]]
+    def __init__(
+            self,
+            name: str,
+            description: str,
+            apps: Optional[list[Typeable]] = None
+            ) -> None:
 
-    def __init__(self, name: str, description: str) -> None:
         self.name = name
         self.description = description
-        self.apps = []
+        self._apps = []
 
-    def app(self, cls: Type[BaseCliApp]) -> None:
-        self.apps.append(cls)
+        if apps:
+            for app in apps:
+                self.add(app)
+
+    def app(self, cls: Type[Typeable]) -> None:
+        instance = cls()
+        self.add(instance)
+
+    def add(self, instance: Typeable) -> None:
+        self._apps.append(instance)
 
     def typer(self) -> Typer:
         group_description = ', '.join([
             f'[bright_blue]{app.name}[/bright_blue]'
-            for app in self.apps
+            for app in self._apps
         ])
 
-        group = Typer(
+        group = _get_typer(
             name=self.name,
             help=(
                 f'{self.description} [bright_black]'
@@ -222,8 +244,8 @@ class CliGroup(Typeable):
                 '[/bright_black]'
             )
         )
-        for sub in self.apps:
-            app = sub()
+
+        for app in self._apps:
             group.add_typer(app.typer())
 
         return group
