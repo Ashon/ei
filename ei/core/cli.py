@@ -134,20 +134,27 @@ class BaseCliApp(Typeable):
         else:
             fields = self.short_fields
 
+        additional_fields = []
         regions = defaults.EI_REGIONS
         if not all_regions:
             regions = [region]
+        else:
+            additional_fields.append(Field('Region'))
 
         account_ids = defaults.EI_ACCOUNT_IDS
         if not all_accounts:
             account_ids = [account_id]
+        else:
+            additional_fields.append(Field('Account'))
 
+        display_fields = additional_fields + [*fields]
         try:
             results = bulk_action(self._service.list, regions, account_ids)
-            serialized_results = _serialize_data_as_list(fields, results)
+            serialized_results = _serialize_data_as_list(
+                display_fields, results)
 
             table = list_table([
-                field._name for field in fields
+                field._name for field in display_fields
             ], serialized_results)
             self._console.print(table)
 

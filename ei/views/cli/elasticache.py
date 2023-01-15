@@ -22,8 +22,6 @@ class ElasticacheReplicationGroupCli(BaseCliApp):
     service_cls: Type[BaseAwsService] = AwsElasticacheReplicationGroupService
 
     short_fields = (
-        Field('Region'),
-        Field('Account'),
         IDField('ReplicationGroupId'),
         Field('Status'),
         Field('AutomaticFailover'),
@@ -66,8 +64,6 @@ class ElasticacheCacheClusterCli(BaseCliApp):
         AwsElasticacheCacheClusterService)
 
     short_fields = (
-        Field('Region'),
-        Field('Account'),
         IDField('CacheClusterId'),
         Field('CacheNodeType'),
         Field('Engine'),

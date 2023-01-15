@@ -27,8 +27,6 @@ class Ec2VpcCli(BaseCliApp):
     service_cls = AwsEc2VpcService
 
     short_fields = (
-        Field('Region'),
-        Field('Account'),
         IDField('VpcId'),
         Field('Name', serializer=extract_from_tag('Name')),
         Field('InstanceTenancy'),
@@ -51,8 +49,6 @@ class Ec2SubnetCli(BaseCliApp):
     service_cls = AwsEc2SubnetService
 
     short_fields = (
-        Field('Region'),
-        Field('Account'),
         IDField('SubnetId'),
         Field('Name', serializer=extract_from_tag('Name')),
         Field('CidrBlock'),
@@ -92,8 +88,6 @@ class Ec2Instance(BaseCliApp):
     service_cls: Type[BaseAwsService] = AwsEc2InstanceService
 
     short_fields = (
-        Field('Region'),
-        Field('Account'),
         IDField('InstanceId'),
         Field('Name', serializer=extract_from_tag('Name')),
         Field('ImageId'),
@@ -151,8 +145,6 @@ class Ec2Ami(BaseCliApp):
     service_cls: Type[BaseAwsService] = AwsEc2AmiService
 
     short_fields = (
-        Field('Region'),
-        Field('Account'),
         IDField('ImageId'),
         Field('Name'),
         BooleanField('Public'),
