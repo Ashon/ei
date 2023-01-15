@@ -19,7 +19,7 @@ group = CliGroup(name='ec2', description='AWS EC2')
 
 
 @group.app
-class VpcCliApp(BaseCliApp):
+class Ec2VpcCli(BaseCliApp):
     name: str = 'vpc'
     description: str = 'EC2 VPC'
 
@@ -44,7 +44,7 @@ class VpcCliApp(BaseCliApp):
 
 
 @group.app
-class SubnetCliApp(BaseCliApp):
+class Ec2SubnetCli(BaseCliApp):
     name: str = 'subnet'
     description: str = 'EC2 Subnet'
     service_cls = AwsEc2SubnetService
@@ -84,8 +84,8 @@ class SubnetCliApp(BaseCliApp):
 
 
 @group.app
-class Ec2CliApp(BaseCliApp):
-    name: str = 'ec2'
+class Ec2Instance(BaseCliApp):
+    name: str = 'instance'
     description: str = 'EC2 instance'
 
     service_cls: Type[BaseAwsService] = AwsEc2InstanceService
@@ -143,7 +143,7 @@ class Ec2CliApp(BaseCliApp):
 
 
 @group.app
-class AmiCliApp(BaseCliApp):
+class Ec2Ami(BaseCliApp):
     name: str = 'ami'
     description: str = 'EC2 AMI'
 

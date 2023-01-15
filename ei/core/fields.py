@@ -57,7 +57,7 @@ class IDField(Field):
 
 class BooleanField(Field):
     def serialize(self, record: Any, raw_value: Any) -> str:
-        color = 'green' if raw_value is True else 'red'
+        color = 'green' if raw_value is True else 'bright_red'
         return f'[{color}]{raw_value}[/{color}]'
 
 

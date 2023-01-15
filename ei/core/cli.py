@@ -1,3 +1,4 @@
+import typing
 from typing import Type
 from typing import Iterable
 
@@ -14,6 +15,10 @@ from ei.core.exceptions import WrongRegionError
 from ei.core.exceptions import WrongAccountError
 from ei.core.table import list_table
 from ei.core.table import detail_table
+
+
+if typing.TYPE_CHECKING:
+    from typing import Callable  # noqa: F401
 
 
 def _preflight() -> None:
@@ -161,10 +166,21 @@ class BaseCliApp(Typeable):
             print(e)
 
     def typer(self) -> Typer:
-        app = Typer(name=self.name, help=self.description)
+        commands = [
+            self.list,
+            self.show
+        ]  # type: list[Callable]
+        available_commands = ', '.join([
+            f'{cmd.__name__}' for cmd in commands
+        ])
 
-        app.command()(self.list)
-        app.command()(self.show)
+        app = Typer(
+            name=self.name,
+            help=f'{self.description} - (available: {available_commands})'
+        )
+
+        for cmd in commands:
+            app.command()(cmd)
 
         return app
 
@@ -184,7 +200,14 @@ class CliGroup(Typeable):
         self.apps.append(cls)
 
     def typer(self) -> Typer:
-        group = Typer(name=self.name, help=self.description)
+        group_description = ', '.join([
+            f'{app.name}' for app in self.apps
+        ])
+
+        group = Typer(
+            name=self.name,
+            help=f'{self.description} - (available: {group_description})'
+        )
         for sub in self.apps:
             app = sub()
             group.add_typer(app.typer())

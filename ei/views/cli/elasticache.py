@@ -15,7 +15,7 @@ group = CliGroup(name='elasticache', description='AWS Elasticache')
 
 
 @group.app
-class ReplicationGroupCliApp(BaseCliApp):
+class ElasticacheReplicationGroupCli(BaseCliApp):
     name: str = 'replicationgroup'
     description: str = 'Elasticache replication group'
 
@@ -58,7 +58,7 @@ class ReplicationGroupCliApp(BaseCliApp):
 
 
 @group.app
-class CacheClusterCliApp(BaseCliApp):
+class ElasticacheCacheClusterCli(BaseCliApp):
     name: str = 'cachecluster'
     description: str = 'Elasticache cache cluster'
 
