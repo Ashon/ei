@@ -36,6 +36,14 @@ dependencies = [
 
 dynamic = ["version"]
 
+[project.optional-dependencies]
+devel = [
+  "flake8==6.0.0",
+  "pytest==7.2.0",
+  "pytest-cov==4.0.0",
+  "mypy==0.991"
+]
+
 [project.urls]
 Documentation = "https://github.com/unknown/ei#readme"
 Issues = "https://github.com/unknown/ei/issues"
@@ -55,11 +63,21 @@ dependencies = [
 
 [tool.hatch.envs.default.scripts]
 lint = "flake8 ."
-test = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=ei --cov=tests {args}"
+test = "pytest ."
 typecheck = "mypy ."
 
 [[tool.hatch.envs.test.matrix]]
 python = ["37", "38", "39", "310", "311"]
+
+[tool.pytest.ini_options]
+addopts = [
+  "--cov=ei",
+  "--cov-config=pyproject.toml",
+  "--cov-report=xml",
+  "--cov-report=term",
+  "--capture=no",
+  "-v",
+]
 
 [tool.coverage.run]
 branch = true
