@@ -40,7 +40,7 @@ class ElasticacheReplicationGroupCli(BaseCliApp):
         Field('ReplicationGroupCreateTime'),
         Field('SnapshotWindow'),
         Field('SnapshotRetentionLimit'),
-        Field('ConfigurationEndpoint'),
+        DictField('ConfigurationEndpoint'),
         Field('PendingModifiedValues'),
         Field('LogDeliveryConfigurations'),
         TagField('Tags')
@@ -96,10 +96,10 @@ class ElasticacheCacheClusterCli(BaseCliApp):
         Field('IpDiscovery'),
         Field('SnapshotRetentionLimit'),
         Field('SnapshotWindow'),
-        Field('CacheParameterGroup'),
+        DictField('CacheParameterGroup'),
         Field('LogDeliveryConfigurations'),
-        Field('SecurityGroups'),
-        Field('PendingModifiedValues'),
+        DictField('SecurityGroups'),
+        DictField('PendingModifiedValues'),
         Field('CacheSecurityGroups'),
         Field('ClientDownloadLandingPage'),
     )

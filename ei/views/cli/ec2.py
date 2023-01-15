@@ -178,6 +178,6 @@ class Ec2Ami(BaseCliApp):
         Field('DeprecationTime'),
         Field('ImageLocation'),
         Field('OwnerId'),
-        Field('BlockDeviceMappings'),
+        DictField('BlockDeviceMappings'),
         Field('ImageOwnerAlias'),
     )

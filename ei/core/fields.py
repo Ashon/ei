@@ -83,7 +83,11 @@ class DictField(Field):
     def serialize(self, record: Any, raw_value: Any) -> str:
         if type(raw_value) is list:
             return '\n'.join([
-                self._render_obj(obj)
+                '\n'.join([
+                    (('- ' if idx == 0 else '  ') + line)
+                    for idx, line in enumerate(
+                        self._render_obj(obj).split('\n'))
+                ])
                 for obj in raw_value
             ])
         else:
