@@ -43,7 +43,7 @@ git tag $NEW_VERSION
 
 echo "New release tag is created $NEW_VERSION"
 echo "Push to main repository (tag: $NEW_VERSION)"
-git push origin master $NEW_VERSION
+git push origin main $NEW_VERSION
 echo "Done"
 
 exit 0
