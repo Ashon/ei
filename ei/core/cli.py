@@ -136,13 +136,18 @@ class BaseCliApp(Typeable):
             region: str = '',
             account_id: str = '',
             all_regions: bool = False,
-            all_accounts: bool = False) -> None:
+            all_accounts: bool = False) -> int:
         """List resources
         """
 
-        _preflight()
-        self._validate_region(region)
-        self._validate_acocunt_id(account_id)
+        try:
+            _preflight()
+            self._validate_region(region)
+            self._validate_acocunt_id(account_id)
+
+        except PreflightError as e:
+            self._console.print(e)
+            return 1
 
         if long:
             fields = self._list_detail_fields
@@ -179,17 +184,24 @@ class BaseCliApp(Typeable):
 
         except ClientError as e:
             print(e)
+            return 1
+
+        return 0
 
     def show(
             self,
             id: str,
             region: str = '',
-            account_id: str = '') -> None:
+            account_id: str = '') -> int:
         """Show resource
         """
+        try:
+            _preflight()
+            self._validate_region(region)
 
-        _preflight()
-        self._validate_region(region)
+        except PreflightError as e:
+            self._console.print(e)
+            return 1
 
         try:
             result = self._service.show(id, region, account_id)
@@ -201,6 +213,9 @@ class BaseCliApp(Typeable):
 
         except ClientError as e:
             print(e)
+            return 1
+
+        return 0
 
     def typer(self) -> Typer:
         commands = [
