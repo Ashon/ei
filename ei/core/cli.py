@@ -25,9 +25,6 @@ if typing.TYPE_CHECKING:
     from typing import Callable  # noqa: F401
 
 
-SUBJECTS = ['Region', 'Account']
-
-
 def create_application(apps: List['Typeable']) -> Typer:
     cli = CliGroup(
         name='ei',
@@ -53,22 +50,10 @@ def _get_typer(name: str, help: str) -> Typer:
 
 def _preflight() -> None:
     if not all(defaults.CONFIGS):
-        raise PreflightError('\n'.join((
-            (
-                'Environment variables are not fulfilled.'
-                ' Check the environment variables.'
-            ),
-            '',
-            f'{defaults.EI_ACCOUNT_IDS=}',
-            f'{defaults.EI_REGIONS=}',
-            f'{defaults.EI_ASSUME_ROLE_ARN_PATTERN=}',
-            f'{defaults.EI_ASSUME_ROLE_SESSION_NAME=}',
-            f'{defaults.AWS_REGION=}',
-            f'{defaults.AWS_ACCESS_KEY_ID=}',
-            f'{defaults.AWS_SECRET_ACCESS_KEY=}',
-            f'{defaults.AWS_SECURITY_TOKEN=}',
-            f'{defaults.AWS_SESSION_EXPIRATION=}',
-        )))
+        raise PreflightError((
+            'Environment variables are not fulfilled.'
+            ' Check the environment variables.'
+        ))
 
 
 def _serialize_data_as_list(fields: Iterable[Field],
@@ -109,6 +94,8 @@ class BaseCliApp(Typeable):
 
     # more additional fields for show resource
     detail_fields: tuple = ()
+
+    stats_fields = ['Region', 'Account']
 
     _service: BaseAwsService
 
@@ -151,7 +138,20 @@ class BaseCliApp(Typeable):
             self._validate_acocunt_id(account_id)
 
         except PreflightError as e:
-            self._console.print(e)
+            self._console.print(e, style='red')
+            self._console.print('\n'.join([
+                '',
+                f'{defaults.EI_ACCOUNT_IDS=}',
+                f'{defaults.EI_REGIONS=}',
+                f'{defaults.EI_ASSUME_ROLE_ARN_PATTERN=}',
+                f'{defaults.EI_ASSUME_ROLE_SESSION_NAME=}',
+                f'{defaults.AWS_REGION=}',
+                f'{defaults.AWS_ACCESS_KEY_ID=}',
+                f'{defaults.AWS_SECRET_ACCESS_KEY=}',
+                f'{defaults.AWS_SECURITY_TOKEN=}',
+                f'{defaults.AWS_SESSION_EXPIRATION=}',
+            ]))
+
             return 1
 
         if long:
@@ -186,7 +186,7 @@ class BaseCliApp(Typeable):
 
             if stat:
                 stats_dict: dict = {}
-                for subject in SUBJECTS:
+                for subject in self.stats_fields:
                     stats_dict[subject] = defaultdict(int)
 
                     for item in results:
@@ -195,9 +195,12 @@ class BaseCliApp(Typeable):
                 self._console.print(
                     f'{len(serialized_results)} "{self.name}" items.')
 
-                for subject in SUBJECTS:
+                for subject in self.stats_fields:
+                    results = list(stats_dict[subject].items())
+                    results.sort(key=lambda x: x[1], reverse=True)
+
                     self._console.print(f'\n* per {subject}')
-                    for key, count in stats_dict[subject].items():
+                    for key, count in results:
                         self._console.print(
                             f'  - "{key}": {count} items.')
 
@@ -214,12 +217,26 @@ class BaseCliApp(Typeable):
             account_id: str = '') -> int:
         """Show resource
         """
+
         try:
             _preflight()
             self._validate_region(region)
 
         except PreflightError as e:
-            self._console.print(e)
+            self._console.print(e, style='red')
+            self._console.print('\n'.join([
+                '',
+                f'{defaults.EI_ACCOUNT_IDS=}',
+                f'{defaults.EI_REGIONS=}',
+                f'{defaults.EI_ASSUME_ROLE_ARN_PATTERN=}',
+                f'{defaults.EI_ASSUME_ROLE_SESSION_NAME=}',
+                f'{defaults.AWS_REGION=}',
+                f'{defaults.AWS_ACCESS_KEY_ID=}',
+                f'{defaults.AWS_SECRET_ACCESS_KEY=}',
+                f'{defaults.AWS_SECURITY_TOKEN=}',
+                f'{defaults.AWS_SESSION_EXPIRATION=}',
+            ]))
+
             return 1
 
         try:

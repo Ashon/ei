@@ -20,6 +20,8 @@ class Ec2RdsInstanceCli(BaseCliApp):
 
     service_cls = AwsRdsInstanceService
 
+    stats_fields = ['Region', 'Account', 'Engine']
+
     short_fields = (
         IDField('DBInstanceIdentifier'),
         Field('DBInstanceClass'),
