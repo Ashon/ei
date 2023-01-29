@@ -31,7 +31,8 @@ dependencies = [
   "mypy-boto3==1.26.42",
   "mypy-boto3-ec2==1.26.34",
   "mypy-boto3-elasticache==1.26.11.post1",
-  "mypy-boto3-rds==1.26.47"
+  "mypy-boto3-rds==1.26.47",
+  "mypy-boto3-s3==1.26.58"
 ]
 
 dynamic = ["version"]

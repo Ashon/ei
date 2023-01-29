@@ -197,7 +197,8 @@ class BaseCliApp(Typeable):
 
                 for subject in self.stats_fields:
                     results = list(stats_dict[subject].items())
-                    results.sort(key=lambda x: x[1], reverse=True)
+                    results.sort(
+                        key=lambda x: x[1], reverse=True)  # type: ignore
 
                     self._console.print(f'\n* per {subject}')
                     for key, count in results:
