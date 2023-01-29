@@ -4,6 +4,8 @@ from ei.core.cli import BaseCliApp
 from ei.core.cli import CliGroup
 from ei.core.fields import Field
 from ei.core.fields import IDField
+from ei.core.fields import DictField
+from ei.core.fields import TagField
 from ei.services.aws.s3 import AwsS3BucketService
 
 
@@ -25,4 +27,17 @@ class S3BucketCli(BaseCliApp):
     )
 
     long_fields = ()
-    detail_fields = ()
+    detail_fields = (
+        DictField('AccelerateConfiguration'),
+        DictField('ACL'),
+        DictField('Encryption'),
+        DictField('Location'),
+        DictField('Logging'),
+        DictField('Notification'),
+        DictField('NotificationConfiguration'),
+        DictField('Policy'),
+        DictField('PolicyStatus'),
+        DictField('RequestPayment'),
+        TagField('TagSet'),
+        DictField('Versioning'),
+    )
