@@ -14,6 +14,7 @@ from ei.core import defaults
 from ei.core.fields import Field
 from ei.core.service import BaseAwsService
 from ei.core.concurrency import bulk_action
+from ei.core.exceptions import BaseError
 from ei.core.exceptions import PreflightError
 from ei.core.exceptions import WrongRegionError
 from ei.core.exceptions import WrongAccountError
@@ -212,7 +213,7 @@ class BaseCliApp(Typeable):
                         self._console.print(
                             f'  - "{key}": {count} items.')
 
-        except ClientError as e:
+        except (BaseError, ClientError) as e:
             print(e)
             return 1
 
@@ -239,7 +240,7 @@ class BaseCliApp(Typeable):
             table = detail_table(serialized_result)
             self._console.print(table)
 
-        except ClientError as e:
+        except (BaseError, ClientError) as e:
             print(e)
             return 1
 

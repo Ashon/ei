@@ -89,7 +89,7 @@ class DictField(Field):
         return '\n'.join([
             f'[bright_black]{key}[/bright_black]: '
             f'{pretty_repr(value) if isinstance(value, Collection) else value}'
-            for key, value in obj.items()
+            for key, value in obj.items() if key != 'ResponseMetadata'
         ])
 
     def serialize(self, record: Any, raw_value: Any) -> str:

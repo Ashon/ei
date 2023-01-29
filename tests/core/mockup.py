@@ -27,6 +27,8 @@ class DummyAwsService(BaseAwsService):
 
 
 class DummyAwsCli(BaseCliApp):
+    name = 'dummy'
+
     service_cls = DummyAwsService
 
     short_fields = ()
