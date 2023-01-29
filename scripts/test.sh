@@ -14,6 +14,7 @@ else
 fi
 
 log "Run Test ${python_version} ${py_version_arg}"
+log "- on python version: $(python --version)"
 
 log '[1/4] Install dependencies'
 pip install -e '.[devel]'
