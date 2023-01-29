@@ -1,6 +1,6 @@
 from unittest import mock
 
-from tests.core.mockup import DummyAwsService
+from tests.mocks.app import DummyAwsService
 
 
 @mock.patch('ei.core.defaults.AWS_REGION', 'region-1')
