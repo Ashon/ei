@@ -1,5 +1,6 @@
 import typing
 from collections import defaultdict
+from typing import Dict
 from typing import List
 from typing import Type
 from typing import Iterable
@@ -67,7 +68,7 @@ def _serialize_data_as_list(fields: Iterable[Field],
     ]
 
 
-def _serialize_data_as_dict(fields: Iterable[Field], result: dict) -> dict:
+def _serialize_data_as_dict(fields: Iterable[Field], result: Dict) -> Dict:
     serialized = {}
 
     for field in fields:
@@ -110,15 +111,15 @@ class BaseCliApp(Typeable):
     def _validate_region(self, region: str) -> None:
         if region and region not in defaults.EI_REGIONS:
             raise WrongRegionError(
-                f'{region=} is not in "EI_REGIONS"'
-                f'({defaults.EI_REGIONS=})'
+                f'region "{region}" is not in "EI_REGIONS"'
+                f'(EI_REGIONS={defaults.EI_REGIONS})'
             )
 
     def _validate_acocunt_id(self, account_id: str) -> None:
         if account_id and account_id not in defaults.EI_ACCOUNT_IDS:
             raise WrongAccountError(
-                f'{account_id=} is not in "EI_ACCOUNT_IDS"'
-                f'({defaults.EI_ACCOUNT_IDS=})'
+                f'account_id "{account_id}" is not in "EI_ACCOUNT_IDS"'
+                f'(EI_ACCOUNT_IDS={defaults.EI_ACCOUNT_IDS})'
             )
 
     def _preflight(self, region: str, account_id: str) -> None:
@@ -131,15 +132,17 @@ class BaseCliApp(Typeable):
             self._console.print(e, style='red')
             self._console.print('\n'.join([
                 '',
-                f'{defaults.EI_ACCOUNT_IDS=}',
-                f'{defaults.EI_REGIONS=}',
-                f'{defaults.EI_STS_ASSUME_ROLE_ARN_PATTERN=}',
-                f'{defaults.EI_STS_ASSUME_ROLE_SESSION_NAME=}',
-                f'{defaults.AWS_REGION=}',
-                f'{defaults.AWS_ACCESS_KEY_ID=}',
-                f'{defaults.AWS_SECRET_ACCESS_KEY=}',
-                f'{defaults.AWS_SECURITY_TOKEN=}',
-                f'{defaults.AWS_SESSION_EXPIRATION=}',
+                f'EI_ACCOUNT_IDS={defaults.EI_ACCOUNT_IDS}',
+                f'EI_REGIONS={defaults.EI_REGIONS}',
+                ('EI_STS_ASSUME_ROLE_ARN_PATTERN='
+                 f'{defaults.EI_STS_ASSUME_ROLE_ARN_PATTERN}'),
+                ('EI_STS_ASSUME_ROLE_SESSION_NAME='
+                 f'{defaults.EI_STS_ASSUME_ROLE_SESSION_NAME}'),
+                f'AWS_REGION={defaults.AWS_REGION}',
+                f'AWS_ACCESS_KEY_ID={defaults.AWS_ACCESS_KEY_ID}',
+                f'AWS_SECRET_ACCESS_KEY={defaults.AWS_SECRET_ACCESS_KEY}',
+                f'AWS_SECURITY_TOKEN={defaults.AWS_SECURITY_TOKEN}',
+                f'AWS_SESSION_EXPIRATION={defaults.AWS_SESSION_EXPIRATION}',
             ]))
 
             raise e
@@ -193,7 +196,7 @@ class BaseCliApp(Typeable):
                 self._console.print(display_table)
 
             if stat:
-                stats_dict: dict = {}
+                stats_dict: Dict = {}
                 for subject in self.stats_fields:
                     stats_dict[subject] = defaultdict(int)
 

@@ -2,6 +2,7 @@ import datetime
 from contextlib import contextmanager
 from typing import TYPE_CHECKING
 from typing import Callable
+from typing import Dict
 from typing import Generator
 from typing import Optional
 
@@ -16,7 +17,7 @@ if TYPE_CHECKING:
     from botocore.session import Session  # noqa: F401
 
 
-def from_sts(account_id: str) -> dict:
+def from_sts(account_id: str) -> Dict:
     sts_client = boto3.Session().client('sts')
 
     role_arn = defaults.EI_STS_ASSUME_ROLE_ARN_PATTERN.format(
@@ -31,7 +32,7 @@ def from_sts(account_id: str) -> dict:
     return credentials
 
 
-def from_env(*args: tuple, **kwargs: dict) -> dict:
+def from_env(*args: tuple, **kwargs: dict) -> Dict:
     credentials = {
         'AccessKeyId': defaults.AWS_ACCESS_KEY_ID,
         'SecretAccessKey': defaults.AWS_SECRET_ACCESS_KEY,
@@ -46,7 +47,7 @@ def from_env(*args: tuple, **kwargs: dict) -> dict:
 credential_resolvers = {
     'env': from_env,
     'sts': from_sts
-}  # type: dict[str, Callable]
+}  # type: Dict[str, Callable]
 
 
 def create_session(
@@ -58,7 +59,7 @@ def create_session(
     credential_resolver: Callable = credential_resolvers[
         defaults.EI_CREDENTIAL_RESOLVER]
 
-    def _get_session_creds() -> dict:
+    def _get_session_creds() -> Dict:
         credentials = credential_resolver(account_id)
 
         credential_metadata = {
