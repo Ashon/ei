@@ -1,6 +1,7 @@
 import datetime
 from contextlib import contextmanager
 from typing import TYPE_CHECKING
+from typing import Callable
 from typing import Generator
 from typing import Optional
 
@@ -18,19 +19,19 @@ if TYPE_CHECKING:
 def from_sts(account_id: str) -> dict:
     sts_client = boto3.Session().client('sts')
 
-    role_arn = defaults.EI_ASSUME_ROLE_ARN_PATTERN.format(
+    role_arn = defaults.EI_STS_ASSUME_ROLE_ARN_PATTERN.format(
         account_id=account_id)
 
     assumed_role_object: dict = sts_client.assume_role(
         RoleArn=role_arn,
-        RoleSessionName=defaults.EI_ASSUME_ROLE_SESSION_NAME)
+        RoleSessionName=defaults.EI_STS_ASSUME_ROLE_SESSION_NAME)
 
     credentials: dict = assumed_role_object['Credentials']
 
     return credentials
 
 
-def from_env() -> dict:
+def from_env(*args: tuple, **kwargs: dict) -> dict:
     credentials = {
         'AccessKeyId': defaults.AWS_ACCESS_KEY_ID,
         'SecretAccessKey': defaults.AWS_SECRET_ACCESS_KEY,
@@ -42,8 +43,10 @@ def from_env() -> dict:
     return credentials
 
 
-# credential_resolver = from_env
-credential_resolver = from_sts
+credential_resolvers = {
+    'env': from_env,
+    'sts': from_sts
+}  # type: dict[str, Callable]
 
 
 def create_session(
@@ -51,6 +54,9 @@ def create_session(
         region: Optional[str] = defaults.AWS_REGION) -> boto3.Session.client:
     """Creates client session via sts client
     """
+
+    credential_resolver: Callable = credential_resolvers[
+        defaults.EI_CREDENTIAL_RESOLVER]
 
     def _get_session_creds() -> dict:
         credentials = credential_resolver(account_id)
