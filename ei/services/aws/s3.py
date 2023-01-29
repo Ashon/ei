@@ -4,10 +4,41 @@ from typing import Any
 from mypy_boto3_s3 import S3Client
 from ei.core.exceptions import ResourceNotfoundError
 from ei.core.service import BaseAwsService
+from ei.core.utils import to_pascal_case
 
 
 class BucketNotFoundError(ResourceNotfoundError):
     pass
+
+
+S3_PROPERTY_FETCHER = {
+    'get': (
+        'accelerate_configuration',
+        'acl',
+        'encryption',
+        'location',
+        'logging',
+        'notification',
+        'notification_configuration',
+        'policy',
+        'policy_status',
+        'request_payment',
+        'tagging',
+        'versioning',
+        'cors',
+        'lifecycle',
+        'lifecycle_configuration',
+        'ownership_controls',
+        'replication',
+        'website',
+    ),
+    'list': (
+        'analytics_configurations',
+        'intelligent_tiering_configurations',
+        'inventory_configurations',
+        'metrics_configurations',
+    ),
+}
 
 
 class AwsS3BucketService(BaseAwsService):
@@ -24,47 +55,19 @@ class AwsS3BucketService(BaseAwsService):
         if not found_bucket:
             raise BucketNotFoundError(id)
 
-        bucket = found_bucket[0]
+        bucket = {**found_bucket[0]}
+        for method, properties in S3_PROPERTY_FETCHER.items():
+            for property in properties:
+                fetcher = getattr(client, f'{method}_bucket_{property}')
 
-        accel_config = client.get_bucket_accelerate_configuration(Bucket=id)
-        acl = client.get_bucket_acl(Bucket=id)
-        encryption = client.get_bucket_encryption(Bucket=id)
-        location = client.get_bucket_location(Bucket=id)
-        logging = client.get_bucket_logging(Bucket=id)
-        noti = client.get_bucket_notification(Bucket=id)
-        noti_config = client.get_bucket_notification_configuration(Bucket=id)
-        policy = client.get_bucket_policy(Bucket=id)
-        policy_status = client.get_bucket_policy_status(Bucket=id)
-        request_payment = client.get_bucket_request_payment(Bucket=id)
-        tag = client.get_bucket_tagging(Bucket=id)['TagSet']
-        versioning = client.get_bucket_versioning(Bucket=id)
+                try:
+                    result = fetcher(Bucket=id)
+                except Exception:
+                    result = {}
 
-        obj = {
-            'Name': bucket['Name'],
-            'CreationDate': bucket['CreationDate'],
-            'AccelerateConfiguration': accel_config,
-            'ACL': acl,
-            'Encryption': encryption,
-            'Location': location,
-            'Logging': logging,
-            'Notification': noti,
-            'NotificationConfiguration': noti_config,
-            'Policy': {'Policy': json.loads(policy['Policy'])},
-            'PolicyStatus': policy_status,
-            'RequestPayment': request_payment,
-            'TagSet': tag,
-            'Versioning': versioning,
-        }
+                bucket[to_pascal_case(property)] = {**result}
 
-        # client.get_bucket_analytics_configuration(Bucket=id)
-        # client.get_bucket_cors(Bucket=id)
-        # client.get_bucket_intelligent_tiering_configuration(Bucket=id)
-        # client.get_bucket_inventory_configuration(Bucket=id)
-        # client.get_bucket_lifecycle(Bucket=id)
-        # client.get_bucket_lifecycle_configuration(Bucket=id)
-        # client.get_bucket_metrics_configuration(Bucket=id)
-        # client.get_bucket_ownership_controls(Bucket=id)
-        # client.get_bucket_replication(Bucket=id)
-        # client.get_bucket_website(Bucket=id)
+        bucket['Tagging'] = bucket['Tagging']['TagSet']
+        bucket['Policy'] = json.loads(bucket['Policy'].get('Policy', '{}'))
 
-        return [obj]
+        return [bucket]

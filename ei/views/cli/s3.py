@@ -29,7 +29,7 @@ class S3BucketCli(BaseCliApp):
     long_fields = ()
     detail_fields = (
         DictField('AccelerateConfiguration'),
-        DictField('ACL'),
+        DictField('Acl'),
         DictField('Encryption'),
         DictField('Location'),
         DictField('Logging'),
@@ -38,6 +38,16 @@ class S3BucketCli(BaseCliApp):
         DictField('Policy'),
         DictField('PolicyStatus'),
         DictField('RequestPayment'),
-        TagField('TagSet'),
         DictField('Versioning'),
+        DictField('Cors'),
+        DictField('Lifecycle'),
+        DictField('LifecycleConfiguration'),
+        DictField('OwnershipControls'),
+        DictField('Replication'),
+        DictField('Website'),
+        DictField('AnalyticsConfigurations'),
+        DictField('IntelligentTieringConfigurations'),
+        DictField('InventoryConfigurations'),
+        DictField('MetricsConfigurations'),
+        TagField('Tagging'),
     )
