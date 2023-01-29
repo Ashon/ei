@@ -2,6 +2,7 @@
 
 aws cli for humans
 
+[![PyPI version](https://badge.fury.io/py/ei-cli.svg)](https://badge.fury.io/py/ei-cli)
 [![CI](https://github.com/Ashon/ei/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Ashon/ei/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/Ashon/ei/branch/main/graph/badge.svg?token=HSW2NN23BY)](https://codecov.io/gh/Ashon/ei)
 
