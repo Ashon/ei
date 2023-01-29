@@ -120,18 +120,7 @@ class BaseCliApp(Typeable):
                 f'({defaults.EI_ACCOUNT_IDS=})'
             )
 
-    def list(
-            self,
-            long: bool = False,
-            stat: bool = True,
-            table: bool = True,
-            region: str = '',
-            account_id: str = '',
-            all_regions: bool = False,
-            all_accounts: bool = False) -> int:
-        """List resources
-        """
-
+    def _preflight(self, region: str, account_id: str) -> None:
         try:
             _preflight()
             self._validate_region(region)
@@ -152,6 +141,24 @@ class BaseCliApp(Typeable):
                 f'{defaults.AWS_SESSION_EXPIRATION=}',
             ]))
 
+            raise e
+
+    def list(
+            self,
+            long: bool = False,
+            stat: bool = True,
+            table: bool = True,
+            region: str = '',
+            account_id: str = '',
+            all_regions: bool = False,
+            all_accounts: bool = False) -> int:
+        """List resources
+        """
+
+        try:
+            self._preflight(region, account_id)
+
+        except PreflightError:
             return 1
 
         if long:
@@ -220,24 +227,8 @@ class BaseCliApp(Typeable):
         """
 
         try:
-            _preflight()
-            self._validate_region(region)
-
-        except PreflightError as e:
-            self._console.print(e, style='red')
-            self._console.print('\n'.join([
-                '',
-                f'{defaults.EI_ACCOUNT_IDS=}',
-                f'{defaults.EI_REGIONS=}',
-                f'{defaults.EI_ASSUME_ROLE_ARN_PATTERN=}',
-                f'{defaults.EI_ASSUME_ROLE_SESSION_NAME=}',
-                f'{defaults.AWS_REGION=}',
-                f'{defaults.AWS_ACCESS_KEY_ID=}',
-                f'{defaults.AWS_SECRET_ACCESS_KEY=}',
-                f'{defaults.AWS_SECURITY_TOKEN=}',
-                f'{defaults.AWS_SESSION_EXPIRATION=}',
-            ]))
-
+            self._preflight(region, account_id)
+        except PreflightError:
             return 1
 
         try:
