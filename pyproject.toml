@@ -77,7 +77,6 @@ addopts = [
   "--cov-config=pyproject.toml",
   "--cov-report=xml",
   "--cov-report=term",
-  "--capture=no",
   "-v",
 ]
 
