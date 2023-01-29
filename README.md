@@ -48,7 +48,7 @@ AWS_SESSION_EXPIRATION=None
 
 ## Run
 
-![ei](assets/ei.png)
+![ei](https://github.com/Ashon/ei/raw/main/assets/ei.png)
 
 Using aws-vault for cross account, region resource retrieving.
 
