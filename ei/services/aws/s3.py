@@ -62,10 +62,9 @@ class AwsS3BucketService(BaseAwsService):
 
                 try:
                     result = fetcher(Bucket=id)
+                    bucket[to_pascal_case(property)] = {**result}
                 except Exception:
-                    result = {}
-
-                bucket[to_pascal_case(property)] = {**result}
+                    pass
 
         bucket['Tagging'] = bucket['Tagging']['TagSet']
         bucket['Policy'] = json.loads(bucket['Policy'].get('Policy', '{}'))

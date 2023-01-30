@@ -2,6 +2,7 @@ import pytest
 from ei.core.fields import extract
 from ei.core.fields import extract_from_tag
 from ei.core.fields import Field
+from ei.core.fields import DictField
 from ei.core.fields import IDField
 from ei.core.fields import BooleanField
 from ei.core.fields import TagField
@@ -79,3 +80,52 @@ def test_tagfield_should_returns_formatted_string() -> None:
     value = serializer({'Tags': []})
 
     assert value == ''
+
+
+def test_dictfield_should_returns_formatted_string() -> None:
+    serializer = DictField('Object')
+    value = serializer({
+        'Object': {
+            'Key': 'Value'
+        }
+    })
+
+    assert value == "[bright_black]Key[/bright_black]: 'Value'"
+
+
+def test_dictfield_should_returns_formatted_string_when_empty_value() -> None:
+    serializer = DictField('Object')
+    value = serializer({
+        'Object': None
+    })
+
+    assert value == '[bright_black]None[/bright_black]'
+
+
+def test_dictfield_should_ignores_response_metadata() -> None:
+    serializer = DictField('Object')
+    value = serializer({
+        'Object': {
+            'Key': 'Value'
+        },
+        'ResponseMetadata': {}
+    })
+
+    assert value == "[bright_black]Key[/bright_black]: 'Value'"
+
+
+def test_dictfield_should_returns_if_dictlist() -> None:
+    serializer = DictField('Object')
+    value = serializer({
+        'Object': [{
+            'KeyA': 'ValueA'
+        }, {
+            'KeyB': 'ValueB'
+        }],
+        'ResponseMetadata': {}
+    })
+
+    assert value == '\n'.join([
+        "- [bright_black]KeyA[/bright_black]: 'ValueA'",
+        "- [bright_black]KeyB[/bright_black]: 'ValueB'"
+    ])
