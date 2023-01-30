@@ -1,5 +1,6 @@
 from typing import Any
 
+import boto3
 from mypy_boto3_elbv2 import ElasticLoadBalancingv2Client
 
 from ei.core.service import BaseAwsService
@@ -10,7 +11,15 @@ class AwsElbLoadbalancerService(BaseAwsService):
 
     @classmethod
     def _list(cls, client: ElasticLoadBalancingv2Client) -> Any:
-        loadbalancers = client.describe_load_balancers()['LoadBalancers']
+        loadbalancers = [
+            {**lb} for lb in client.describe_load_balancers()['LoadBalancers']
+        ]
+
+        loadbalancers = [{
+            'ShortenId': str(lb['LoadBalancerArn']).split(':loadbalancer/')[1],
+            **lb
+        } for lb in loadbalancers]
+
         return loadbalancers
 
     @classmethod
@@ -27,16 +36,26 @@ class AwsElbLoadbalancerService(BaseAwsService):
         - [green]Tags[/green]: boto3.describe_tags()
         """
 
+        region_name = client._request_signer._region_name
+        identity = boto3.client('sts').get_caller_identity()
+        account_id = identity.get('Account')
+
+        arn = (
+            'arn:aws:elasticloadbalancing:'
+            f'{region_name}:{account_id}:loadbalancer/{id}'
+        )
+
         loadbalancer = client.describe_load_balancers(
-            LoadBalancerArns=[id])['LoadBalancers']
+            LoadBalancerArns=[arn])['LoadBalancers']
         attributes = client.describe_load_balancer_attributes(
-            LoadBalancerArn=id)
-        listeners = client.describe_listeners(LoadBalancerArn=id)
-        target_groups = client.describe_target_groups(LoadBalancerArn=id)
+            LoadBalancerArn=arn)
+        listeners = client.describe_listeners(LoadBalancerArn=arn)
+        target_groups = client.describe_target_groups(LoadBalancerArn=arn)
         tags = client.describe_tags(
-            ResourceArns=[id])['TagDescriptions'][0]['Tags']
+            ResourceArns=[arn])['TagDescriptions'][0]['Tags']
 
         return [{
+            'ShortenId': id,
             **loadbalancer[0],
             'Attributes': attributes.get('Attributes'),
             'Listeners': listeners.get('Listeners'),
@@ -75,21 +94,39 @@ class AwsElbTargetGroupService(BaseAwsService):
 
     @classmethod
     def _list(cls, client: ElasticLoadBalancingv2Client) -> Any:
-        target_groups = client.describe_target_groups()['TargetGroups']
+        target_groups = [
+            {**tg} for tg in client.describe_target_groups()['TargetGroups']
+        ]
+
+        target_groups = [{
+            'ShortenId': str(tg['TargetGroupArn']).split(':targetgroup/')[1],
+            **tg
+        } for tg in target_groups]
+
         return target_groups
 
     @classmethod
     def _show(cls, client: ElasticLoadBalancingv2Client, id: str) -> Any:
+        region_name = client._request_signer._region_name
+        identity = boto3.client('sts').get_caller_identity()
+        account_id = identity.get('Account')
+
+        arn = (
+            'arn:aws:elasticloadbalancing:'
+            f'{region_name}:{account_id}:targetgroup/{id}'
+        )
+
         target_group = client.describe_target_groups(
-            TargetGroupArns=[id])['TargetGroups']
+            TargetGroupArns=[arn])['TargetGroups']
 
         attributes = client.describe_target_group_attributes(
-            TargetGroupArn=id)
-        health = client.describe_target_health(TargetGroupArn=id)
+            TargetGroupArn=arn)
+        health = client.describe_target_health(TargetGroupArn=arn)
         tags = client.describe_tags(
-            ResourceArns=[id])['TagDescriptions'][0]['Tags']
+            ResourceArns=[arn])['TagDescriptions'][0]['Tags']
 
         return [{
+            'ShortenId': id,
             **target_group[0],
             'Certificates': attributes.get('Attributes'),
             'Rules': health.get('TargetHealthDescriptions'),

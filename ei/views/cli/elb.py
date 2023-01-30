@@ -22,25 +22,27 @@ class ElbLoadbalancerCli(BaseCliApp):
 
     service_cls = AwsElbLoadbalancerService
 
-    stats_fields = ['Region', 'Account', 'Type']
+    stats_fields = [
+        'Region', 'Account', 'Scheme', 'Type', 'CanonicalHostedZoneId']
 
     short_fields = (
-        IDField('LoadBalancerArn'),
+        IDField('ShortenId'),
         Field('LoadBalancerName'),
         Field('State', serializer=extract('Code')),
-        Field('Type'),
-    )
-
-    long_fields = (
-        Field('IpAddressType'),
         Field('Scheme'),
-        Field('CreatedTime'),
+        Field('Type'),
+        Field('IpAddressType'),
         Field('CanonicalHostedZoneId'),
     )
 
-    detail_fields = (
+    long_fields = (
         Field('VpcId'),
+        Field('CreatedTime'),
+    )
+
+    detail_fields = (
         Field('DNSName'),
+        IDField('LoadBalancerArn'),
         DictField('Attributes'),
         DictField('AvailabilityZones'),
         DictField('Listeners'),
@@ -80,8 +82,10 @@ class ElbTargetGroupCli(BaseCliApp):
 
     service_cls = AwsElbTargetGroupService
 
+    stats_fields = ['Region', 'Account', 'Protocol', 'TargetType']
+
     short_fields = (
-        IDField('TargetGroupArn'),
+        IDField('ShortenId'),
         Field('TargetGroupName'),
         Field('Protocol'),
         Field('Port'),
@@ -100,6 +104,7 @@ class ElbTargetGroupCli(BaseCliApp):
     )
 
     detail_fields = (
+        IDField('TargetGroupArn'),
         Field('VpcId'),
         Field('ProtocolVersion'),
         Field('IpAddressType'),
