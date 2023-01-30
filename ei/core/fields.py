@@ -86,6 +86,9 @@ class TagField(Field):
 
 class DictField(Field):
     def _render_obj(self, obj: dict) -> str:
+        if not obj:
+            return '[bright_black]None[/bright_black]'
+
         return '\n'.join([
             f'[bright_black]{key}[/bright_black]: '
             f'{pretty_repr(value) if isinstance(value, Collection) else value}'
