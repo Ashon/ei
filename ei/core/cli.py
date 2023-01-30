@@ -214,6 +214,10 @@ class BaseCliApp(Typeable):
             print(e)
             return 1
 
+        except NotImplementedError:
+            self._console.print(
+                '[yellow]This command is not supported yet. :grin:[/yellow]')
+
         return 0
 
     def show(
@@ -240,6 +244,10 @@ class BaseCliApp(Typeable):
         except (BaseError, ClientError) as e:
             print(e)
             return 1
+
+        except NotImplementedError:
+            self._console.print(
+                '[yellow]This command is not supported yet. :grin:[/yellow]')
 
         return 0
 
