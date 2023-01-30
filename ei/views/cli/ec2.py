@@ -87,7 +87,7 @@ class Ec2Instance(BaseCliApp):
 
     service_cls: Type[BaseAwsService] = AwsEc2InstanceService
 
-    stats_fields = ['Region', 'Account', 'InstanceType', 'ImageId']
+    stats_fields = ['Region', 'Account', 'InstanceType', 'ImageId', 'State']
 
     short_fields = (
         IDField('InstanceId'),

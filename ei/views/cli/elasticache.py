@@ -22,7 +22,8 @@ class ElasticacheReplicationGroupCli(BaseCliApp):
 
     service_cls: Type[BaseAwsService] = AwsElasticacheReplicationGroupService
 
-    stats_fields = ['Region', 'Account', 'ClusterEnabled', 'CacheNodeType']
+    stats_fields = [
+        'Region', 'Account', 'ClusterEnabled', 'CacheNodeType', 'Status']
 
     short_fields = (
         IDField('ReplicationGroupId'),
