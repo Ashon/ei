@@ -37,7 +37,14 @@ def create_application(apps: List['Typeable']) -> Typer:
         apps=apps
     )
 
-    return cli.typer()
+    typer = cli.typer()
+
+    @typer.command(help='Show Current Configuration')
+    def config() -> None:
+        console = Console()
+        console.print(defaults.print_config())
+
+    return typer
 
 
 def _get_typer(name: str, help: str) -> Typer:
@@ -130,20 +137,7 @@ class BaseCliApp(Typeable):
 
         except PreflightError as e:
             self._console.print(e, style='red')
-            self._console.print('\n'.join([
-                '',
-                f'EI_ACCOUNT_IDS={defaults.EI_ACCOUNT_IDS}',
-                f'EI_REGIONS={defaults.EI_REGIONS}',
-                ('EI_STS_ASSUME_ROLE_ARN_PATTERN='
-                 f'{defaults.EI_STS_ASSUME_ROLE_ARN_PATTERN}'),
-                ('EI_STS_ASSUME_ROLE_SESSION_NAME='
-                 f'{defaults.EI_STS_ASSUME_ROLE_SESSION_NAME}'),
-                f'AWS_REGION={defaults.AWS_REGION}',
-                f'AWS_ACCESS_KEY_ID={defaults.AWS_ACCESS_KEY_ID}',
-                f'AWS_SECRET_ACCESS_KEY={defaults.AWS_SECRET_ACCESS_KEY}',
-                f'AWS_SECURITY_TOKEN={defaults.AWS_SECURITY_TOKEN}',
-                f'AWS_SESSION_EXPIRATION={defaults.AWS_SESSION_EXPIRATION}',
-            ]))
+            self._console.print(f'\n{defaults.print_config()}')
 
             raise e
 
@@ -250,12 +244,9 @@ class BaseCliApp(Typeable):
         return 0
 
     def typer(self) -> Typer:
-        commands = [
-            self.list,
-            self.show
-        ]  # type: List[Callable]
+        commands = ['list', 'show']  # type: List[str]
         available_commands = ', '.join([
-            f'[bright_blue]{cmd.__name__}[/bright_blue]'
+            f'[bright_blue]{cmd}[/bright_blue]'
             for cmd in commands
         ])
 
@@ -269,7 +260,10 @@ class BaseCliApp(Typeable):
         )
 
         for cmd in commands:
-            app.command()(cmd)
+            fn = getattr(self, cmd)
+            service_fn = getattr(self.service_cls, f'_{cmd}')
+            # replace help message to implemented function's docstring.
+            app.command(help=service_fn.__doc__)(fn)
 
         return app
 

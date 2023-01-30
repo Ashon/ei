@@ -35,3 +35,20 @@ CONFIGS = (
     os.getenv('AWS_SECURITY_TOKEN', ''),
     os.getenv('AWS_SESSION_EXPIRATION', '')
 )
+
+
+def print_config() -> str:
+    return '\n'.join((
+        f'EI_CREDENTIAL_RESOLVER={EI_CREDENTIAL_RESOLVER!r}',
+        f'EI_ACCOUNT_IDS={EI_ACCOUNT_IDS}',
+        f'EI_REGIONS={EI_REGIONS}',
+        ('EI_STS_ASSUME_ROLE_ARN_PATTERN='
+            f'{EI_STS_ASSUME_ROLE_ARN_PATTERN!r}'),
+        ('EI_STS_ASSUME_ROLE_SESSION_NAME='
+            f'{EI_STS_ASSUME_ROLE_SESSION_NAME!r}'),
+        f'AWS_REGION={AWS_REGION!r}',
+        f'AWS_ACCESS_KEY_ID={AWS_ACCESS_KEY_ID!r}',
+        f'AWS_SECRET_ACCESS_KEY={AWS_SECRET_ACCESS_KEY!r}',
+        f'AWS_SECURITY_TOKEN={AWS_SECURITY_TOKEN!r}',
+        f'AWS_SESSION_EXPIRATION={AWS_SESSION_EXPIRATION!r}',
+    ))
