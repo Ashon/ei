@@ -27,6 +27,9 @@ if typing.TYPE_CHECKING:
     from typing import Callable  # noqa: F401
 
 
+TOPK = 10
+
+
 def create_application(apps: List['Typeable']) -> Typer:
     cli = CliGroup(
         name='ei',
@@ -195,7 +198,7 @@ class BaseCliApp(Typeable):
                     stats_dict[subject] = defaultdict(int)
 
                     for item in results:
-                        stats_dict[subject][item[subject]] += 1
+                        stats_dict[subject][str(item[subject])] += 1
 
                 self._console.print(
                     f'{len(serialized_results)} "{self.name}" items.')
@@ -205,8 +208,13 @@ class BaseCliApp(Typeable):
                     results.sort(
                         key=lambda x: x[1], reverse=True)  # type: ignore
 
-                    self._console.print(f'\n* per {subject}')
-                    for key, count in results:
+                    stat_header = f'\n* per {subject}'
+                    if len(results) > TOPK:
+                        stat_header += (
+                            f' (top:{TOPK} / total categories:{len(results)})')
+
+                    self._console.print(stat_header)
+                    for key, count in results[:TOPK]:
                         self._console.print(
                             f'  - "{key}": {count} items.')
 

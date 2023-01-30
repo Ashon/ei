@@ -22,6 +22,8 @@ class ElbLoadbalancerCli(BaseCliApp):
 
     service_cls = AwsElbLoadbalancerService
 
+    stats_fields = ['Region', 'Account', 'Type']
+
     short_fields = (
         IDField('LoadBalancerArn'),
         Field('LoadBalancerName'),
