@@ -9,6 +9,7 @@ from ei.core.fields import TagField
 from ei.core.fields import DictField
 from ei.services.aws.elasticache import AwsElasticacheReplicationGroupService
 from ei.services.aws.elasticache import AwsElasticacheCacheClusterService
+from ei.services.aws.elasticache import AwsElasticacheEventService
 
 
 group = CliGroup(name='elasticache', description='AWS Elasticache')
@@ -103,3 +104,21 @@ class ElasticacheCacheClusterCli(BaseCliApp):
         Field('CacheSecurityGroups'),
         Field('ClientDownloadLandingPage'),
     )
+
+
+@group.app
+class ElasticacheEventCli(BaseCliApp):
+    name: str = 'event'
+    description: str = 'Elasticache event'
+
+    service_cls = AwsElasticacheEventService
+
+    short_fields = (
+        Field('SourceIdentifier'),
+        Field('SourceType'),
+        Field('Message'),
+        Field('Date'),
+    )
+
+    long_fields = ()
+    detail_fields = ()
