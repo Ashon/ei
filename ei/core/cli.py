@@ -1,11 +1,14 @@
-import typing
 from collections import defaultdict
+from functools import wraps
+from typing import Any
+from typing import Callable
 from typing import Dict
 from typing import List
 from typing import Type
 from typing import Iterable
 from typing import Optional
 
+from typer import Exit
 from typer import Typer
 from rich.console import Console
 from botocore.exceptions import ClientError
@@ -21,10 +24,6 @@ from ei.core.exceptions import WrongRegionError
 from ei.core.exceptions import WrongAccountError
 from ei.core.table import list_table
 from ei.core.table import detail_table
-
-
-if typing.TYPE_CHECKING:
-    from typing import Callable  # noqa: F401
 
 
 TOPK = 10
@@ -95,6 +94,47 @@ class Typeable(object):
         raise NotImplementedError()
 
 
+def guard_common_errors(fn: Callable) -> Callable:
+    """Wrap exposing command function with common Exception handlers
+
+    Common Exceptions:
+
+    - PreflightError: failed to check default configuration (env vars)
+    - BaseError, ClientError: Expected Exception from AWS or client
+    - NotImplementedError: Not Supported command
+    """
+
+    @wraps(fn)
+    def _wraps(self: 'BaseCliApp', region: str = '', account_id: str = '',
+               *args: tuple, **kwargs: Dict) -> Any:
+        try:
+            _preflight()
+            self._validate_region(region)
+            self._validate_acocunt_id(account_id)
+
+        except PreflightError as e:
+            self._console.print(e, style='red')
+            self._console.print(f'\n{defaults.print_config()}')
+            raise Exit(code=1)
+
+        try:
+            result = fn(
+                self, region=region, account_id=account_id, *args, **kwargs)
+
+            return result
+
+        except (BaseError, ClientError) as e:
+            print(e)
+            raise Exit(code=1)
+
+        except NotImplementedError:
+            self._console.print(
+                '[yellow]This command is not supported yet. :grin:[/yellow]')
+            raise Exit(code=1)
+
+    return _wraps
+
+
 class BaseCliApp(Typeable):
     service_cls: Type[BaseAwsService]
 
@@ -132,35 +172,13 @@ class BaseCliApp(Typeable):
                 f'(EI_ACCOUNT_IDS={defaults.EI_ACCOUNT_IDS})'
             )
 
-    def _preflight(self, region: str, account_id: str) -> None:
-        try:
-            _preflight()
-            self._validate_region(region)
-            self._validate_acocunt_id(account_id)
-
-        except PreflightError as e:
-            self._console.print(e, style='red')
-            self._console.print(f'\n{defaults.print_config()}')
-
-            raise e
-
-    def list(
+    def _defaulting_args(
             self,
-            long: bool = False,
-            stat: bool = True,
-            table: bool = True,
-            region: str = '',
-            account_id: str = '',
-            all_regions: bool = False,
-            all_accounts: bool = False) -> int:
-        """List resources
-        """
-
-        try:
-            self._preflight(region, account_id)
-
-        except PreflightError:
-            return 1
+            long: bool,
+            region: str,
+            all_regions: bool,
+            account_id: str,
+            all_accounts: bool) -> tuple:
 
         if long:
             fields = self._list_detail_fields
@@ -181,53 +199,64 @@ class BaseCliApp(Typeable):
             additional_fields.append(Field('Account'))
 
         display_fields = additional_fields + [*fields]
-        try:
-            results = [*bulk_action(self._service.list, regions, account_ids)]
-            serialized_results = _serialize_data_as_list(
-                display_fields, results)
 
-            if table:
-                display_table = list_table([
-                    field._name for field in display_fields
-                ], serialized_results)
-                self._console.print(display_table)
+        return (regions, account_ids, display_fields)
 
-            if stat:
-                stats_dict: Dict = {}
-                for subject in self.stats_fields:
-                    stats_dict[subject] = defaultdict(int)
+    @guard_common_errors
+    def list(
+            self,
+            long: bool = False,
+            stat: bool = True,
+            table: bool = True,
+            region: str = '',
+            account_id: str = '',
+            all_regions: bool = False,
+            all_accounts: bool = False) -> int:
+        """List resources
+        """
 
-                    for item in results:
-                        stats_dict[subject][str(item[subject])] += 1
+        regions, account_ids, display_fields = self._defaulting_args(
+            long, region, all_regions, account_id, all_accounts)
 
-                self._console.print(
-                    f'{len(serialized_results)} "{self.name}" items.')
+        results = [*bulk_action(self._service.list, regions, account_ids)]
+        serialized_results = _serialize_data_as_list(
+            display_fields, results)
 
-                for subject in self.stats_fields:
-                    results = list(stats_dict[subject].items())
-                    results.sort(
-                        key=lambda x: x[1], reverse=True)  # type: ignore
+        if table:
+            display_table = list_table([
+                field._name for field in display_fields
+            ], serialized_results)
+            self._console.print(display_table)
 
-                    stat_header = f'\n* per {subject}'
-                    if len(results) > TOPK:
-                        stat_header += (
-                            f' (top:{TOPK} / total categories:{len(results)})')
+        if stat:
+            stats_dict: Dict = {}
+            for subject in self.stats_fields:
+                stats_dict[subject] = defaultdict(int)
 
-                    self._console.print(stat_header)
-                    for key, count in results[:TOPK]:
-                        self._console.print(
-                            f'  - "{key}": {count} items.')
+                for item in results:
+                    stats_dict[subject][
+                        str(item.get(subject))] += 1
 
-        except (BaseError, ClientError) as e:
-            print(e)
-            return 1
-
-        except NotImplementedError:
             self._console.print(
-                '[yellow]This command is not supported yet. :grin:[/yellow]')
+                f'{len(serialized_results)} "{self.name}" items.')
+
+            for subject in self.stats_fields:
+                results = list(stats_dict[subject].items())
+                results.sort(
+                    key=lambda x: x[1], reverse=True)  # type: ignore
+
+                stat_header = f'\n* per {subject}'
+                if len(results) > TOPK:
+                    stat_header += (
+                        f' (top:{TOPK} / total categories:{len(results)})')
+
+                self._console.print(stat_header)
+                for key, count in results[:TOPK]:
+                    self._console.print(f'  - "{key}": {count} items.')
 
         return 0
 
+    @guard_common_errors
     def show(
             self,
             id: str,
@@ -236,26 +265,12 @@ class BaseCliApp(Typeable):
         """Show resource
         """
 
-        try:
-            self._preflight(region, account_id)
-        except PreflightError:
-            return 1
+        result = self._service.show(id, region, account_id)
+        serialized_result = _serialize_data_as_dict(
+            self._full_fields, result)
 
-        try:
-            result = self._service.show(id, region, account_id)
-            serialized_result = _serialize_data_as_dict(
-                self._full_fields, result)
-
-            table = detail_table(serialized_result)
-            self._console.print(table)
-
-        except (BaseError, ClientError) as e:
-            print(e)
-            return 1
-
-        except NotImplementedError:
-            self._console.print(
-                '[yellow]This command is not supported yet. :grin:[/yellow]')
+        table = detail_table(serialized_result)
+        self._console.print(table)
 
         return 0
 

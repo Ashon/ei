@@ -14,4 +14,4 @@ def test_cli_app_should_returns_stats(mock_defaults: Any) -> None:
 
     app = DummyAwsCli()
     app.list()
-    app.show('')
+    app.show(id='')
