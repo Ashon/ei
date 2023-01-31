@@ -15,16 +15,16 @@ def test_dummy_service() -> None:
     assert items[0]['Account'] == 'test-account'
 
     item = service.show(
-        id='1', region='test-region', account_id='test-account')
+        id='item-a', region='test-region', account_id='test-account')
     assert item['Region'] == 'test-region'
     assert item['Account'] == 'test-account'
 
     item = service.show(
-        id='1', region='', account_id='test-account')
+        id='item-a', region='', account_id='test-account')
     assert item['Region'] == 'region-1'
     assert item['Account'] == 'test-account'
 
     item = service.show(
-        id='1', region='', account_id='')
+        id='item-a', region='', account_id='')
     assert item['Region'] == 'region-1'
     assert item['Account'] == 'account-a'
