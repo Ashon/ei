@@ -27,7 +27,12 @@ class AwsElasticacheCacheClusterService(BaseAwsService):
 
     @classmethod
     def _list(cls, client: ElastiCacheClient) -> Any:
-        clusters = client.describe_cache_clusters()['CacheClusters']
+        paginator = client.get_paginator(
+            operation_name='describe_cache_clusters')
+        clusters = chain(*[
+            page['CacheClusters']
+            for page in paginator.paginate()
+        ])
         return clusters
 
     @classmethod
