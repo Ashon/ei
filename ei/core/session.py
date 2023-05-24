@@ -1,4 +1,4 @@
-import datetime
+# import datetime
 from contextlib import contextmanager
 from typing import TYPE_CHECKING
 from typing import Callable
@@ -36,9 +36,9 @@ def from_env(*args: tuple, **kwargs: dict) -> Dict:
     credentials = {
         'AccessKeyId': defaults.AWS_ACCESS_KEY_ID,
         'SecretAccessKey': defaults.AWS_SECRET_ACCESS_KEY,
-        'SessionToken': defaults.AWS_SECURITY_TOKEN,
-        'Expiration': datetime.datetime.fromisoformat(
-            defaults.AWS_SESSION_EXPIRATION)
+        # 'SessionToken': defaults.AWS_SECURITY_TOKEN,
+        # 'Expiration': datetime.datetime.fromisoformat(
+        #     defaults.AWS_SESSION_EXPIRATION)
     }
 
     return credentials

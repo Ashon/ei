@@ -20,8 +20,8 @@ CONFIGS = (
     AWS_REGION,
     AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY,
-    AWS_SECURITY_TOKEN,
-    AWS_SESSION_EXPIRATION,
+    # AWS_SECURITY_TOKEN,
+    # AWS_SESSION_EXPIRATION,
 ) = (
     os.getenv('EI_CREDENTIAL_RESOLVER', 'sts'),
 
@@ -32,8 +32,8 @@ CONFIGS = (
     os.getenv('AWS_REGION', ''),
     os.getenv('AWS_ACCESS_KEY_ID', ''),
     os.getenv('AWS_SECRET_ACCESS_KEY', ''),
-    os.getenv('AWS_SECURITY_TOKEN', ''),
-    os.getenv('AWS_SESSION_EXPIRATION', '')
+    # os.getenv('AWS_SECURITY_TOKEN', ''),
+    # os.getenv('AWS_SESSION_EXPIRATION', '')
 )
 
 
@@ -49,6 +49,6 @@ def print_config() -> str:
         f'AWS_REGION={AWS_REGION!r}',
         f'AWS_ACCESS_KEY_ID={AWS_ACCESS_KEY_ID!r}',
         f'AWS_SECRET_ACCESS_KEY={AWS_SECRET_ACCESS_KEY!r}',
-        f'AWS_SECURITY_TOKEN={AWS_SECURITY_TOKEN!r}',
-        f'AWS_SESSION_EXPIRATION={AWS_SESSION_EXPIRATION!r}',
+        # f'AWS_SECURITY_TOKEN={AWS_SECURITY_TOKEN!r}',
+        # f'AWS_SESSION_EXPIRATION={AWS_SESSION_EXPIRATION!r}',
     ))
