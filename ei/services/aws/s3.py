@@ -67,6 +67,7 @@ class AwsS3BucketService(BaseAwsService):
                     pass
 
         bucket['Tagging'] = bucket['Tagging']['TagSet']
-        bucket['Policy'] = json.loads(bucket['Policy'].get('Policy', '{}'))
+        if bucket.get('Policy'):
+            bucket['Policy'] = json.loads(bucket['Policy'].get('Policy', '{}'))
 
         return [bucket]
