@@ -74,3 +74,19 @@ class AwsEc2AmiService(BaseAwsService):
         image = client.describe_images(ImageIds=[id])['Images']
 
         return image
+
+
+class AwsEc2RouteTableService(BaseAwsService):
+    service_name = 'ec2'
+
+    @classmethod
+    def _list(cls, client: EC2Client) -> Any:
+        route_tables = client.describe_route_tables()['RouteTables']
+        return route_tables
+
+    @classmethod
+    def _show(cls, client: EC2Client, id: str) -> Any:
+        route_table = client.describe_route_tables(
+            RouteTableIds=[id])['RouteTables']
+
+        return route_table
