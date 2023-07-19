@@ -10,6 +10,7 @@ from typing import Optional
 
 from typer import Exit
 from typer import Typer
+from rich import print_json
 from rich.console import Console
 from botocore.exceptions import ClientError
 
@@ -212,7 +213,8 @@ class BaseCliApp(Typeable):
             account_id: str = '',
             all_regions: bool = False,
             all_accounts: bool = False,
-            debug: bool = False) -> int:
+            debug: bool = False,
+            format: str = 'table') -> int:
         """List resources
         """
 
@@ -225,41 +227,49 @@ class BaseCliApp(Typeable):
             self._console.print(results)
             self._console.print('---')
 
-        serialized_results = _serialize_data_as_list(
-            display_fields, results)
+        if format == 'json':
+            print_json(data=results, default=str)
 
-        if table:
-            display_table = list_table([
-                field._name for field in display_fields
-            ], serialized_results)
-            self._console.print(display_table)
+            return 0
 
-        if stat:
-            stats_dict: Dict = {}
-            for subject in self.stats_fields:
-                stats_dict[subject] = defaultdict(int)
+        if format == 'table':
+            serialized_results = _serialize_data_as_list(
+                display_fields, results)
 
-                for item in results:
-                    stats_dict[subject][
-                        str(item.get(subject))] += 1
+            if table:
+                display_table = list_table([
+                    field._name for field in display_fields
+                ], serialized_results)
+                self._console.print(display_table)
 
-            self._console.print(
-                f'{len(serialized_results)} "{self.name}" items.')
+            if stat:
+                stats_dict: Dict = {}
+                for subject in self.stats_fields:
+                    stats_dict[subject] = defaultdict(int)
 
-            for subject in self.stats_fields:
-                results = list(stats_dict[subject].items())
-                results.sort(key=lambda x: x[1], reverse=True)
+                    for item in results:
+                        stats_dict[subject][
+                            str(item.get(subject))] += 1
 
-                stat_header = f'\n* per {subject}'
-                if len(results) > TOPK:
-                    stat_header += (
-                        f' (top:{TOPK} / total categories:{len(results)})')
+                self._console.print(
+                    f'{len(serialized_results)} "{self.name}" items.')
 
-                self._console.print(stat_header)
-                for key, count in results[:TOPK]:
-                    self._console.print(f'  - "{key}": {count} items.')
+                for subject in self.stats_fields:
+                    results = list(stats_dict[subject].items())
+                    results.sort(key=lambda x: x[1], reverse=True)
 
-        return 0
+                    stat_header = f'\n* per {subject}'
+                    if len(results) > TOPK:
+                        stat_header += (
+                            f' (top:{TOPK} / total categories:{len(results)})')
+
+                    self._console.print(stat_header)
+                    for key, count in results[:TOPK]:
+                        self._console.print(f'  - "{key}": {count} items.')
+
+            return 0
+
+        return 1
 
     @guard_common_errors
     def show(
@@ -267,7 +277,8 @@ class BaseCliApp(Typeable):
             id: str,
             region: str = '',
             account_id: str = '',
-            debug: bool = False) -> int:
+            debug: bool = False,
+            format: str = 'table') -> int:
         """Show resource
         """
 
@@ -276,13 +287,22 @@ class BaseCliApp(Typeable):
             self._console.print('--- DEBUG')
             self._console.print(result)
             self._console.print('---')
-        serialized_result = _serialize_data_as_dict(
-            self._full_fields, result)
 
-        table = detail_table(serialized_result)
-        self._console.print(table)
+        if format == 'json':
+            print_json(data=result, default=str)
 
-        return 0
+            return 0
+
+        if format == 'table':
+            serialized_result = _serialize_data_as_dict(
+                self._full_fields, result)
+
+            table = detail_table(serialized_result)
+            self._console.print(table)
+
+            return 0
+
+        return 1
 
     def typer(self) -> Typer:
         commands = ['list', 'show']  # type: List[str]
