@@ -211,7 +211,8 @@ class BaseCliApp(Typeable):
             region: str = '',
             account_id: str = '',
             all_regions: bool = False,
-            all_accounts: bool = False) -> int:
+            all_accounts: bool = False,
+            debug: bool = False) -> int:
         """List resources
         """
 
@@ -219,6 +220,11 @@ class BaseCliApp(Typeable):
             long, region, all_regions, account_id, all_accounts)
 
         results = [*bulk_action(self._service.list, regions, account_ids)]
+        if debug:
+            self._console.print('--- DEBUG')
+            self._console.print(results)
+            self._console.print('---')
+
         serialized_results = _serialize_data_as_list(
             display_fields, results)
 
@@ -242,8 +248,7 @@ class BaseCliApp(Typeable):
 
             for subject in self.stats_fields:
                 results = list(stats_dict[subject].items())
-                results.sort(
-                    key=lambda x: x[1], reverse=True)  # type: ignore
+                results.sort(key=lambda x: x[1], reverse=True)
 
                 stat_header = f'\n* per {subject}'
                 if len(results) > TOPK:
@@ -261,11 +266,16 @@ class BaseCliApp(Typeable):
             self,
             id: str,
             region: str = '',
-            account_id: str = '') -> int:
+            account_id: str = '',
+            debug: bool = False) -> int:
         """Show resource
         """
 
         result = self._service.show(id, region, account_id)
+        if debug:
+            self._console.print('--- DEBUG')
+            self._console.print(result)
+            self._console.print('---')
         serialized_result = _serialize_data_as_dict(
             self._full_fields, result)
 

@@ -16,6 +16,7 @@ from ei.services.aws.ec2 import AwsEc2SubnetService
 from ei.services.aws.ec2 import AwsEc2InstanceService
 from ei.services.aws.ec2 import AwsEc2AmiService
 from ei.services.aws.ec2 import AwsEc2RouteTableService
+from ei.services.aws.ec2 import AwsEc2TransitGatewayService
 
 
 group = CliGroup(name='ec2', description='AWS EC2')
@@ -199,4 +200,35 @@ class Ec2Ami(BaseCliApp):
         Field('OwnerId'),
         DictField('BlockDeviceMappings'),
         Field('ImageOwnerAlias'),
+    )
+
+
+@group.app
+class Ec2TransitGatewayCli(BaseCliApp):
+    name: str = 'transit-gateway'
+    description: str = 'EC2 Transit Gateway'
+    service_cls = AwsEc2TransitGatewayService
+    stats_fields = ['VpcId']
+    short_fields = (
+        IDField('TransitGatewayId'),
+        Field('Name', serializer=extract_from_tag('Name')),
+        Field('State'),
+        Field('# RouteTables', serializer=count('RouteTables')),
+        Field('# Att.Vpcs', serializer=count('VpcAttachments')),
+        Field('# Att.Peerings', serializer=count('PeeringAttachments')),
+        Field('# Att.Others', serializer=count('OtherAttachments')),
+        Field('CreationTime'),
+    )
+    long_fields = ()
+    detail_fields = (
+        Field('TransitGatewayArn'),
+        DictField('Options'),
+        DictField('Connects'),
+        DictField('MulticastDomains'),
+        DictField('RouteTables'),
+        DictField('RouteTableAnnouncements'),
+        DictField('PolicyTables'),
+        DictField('VpcAttachments'),
+        DictField('PeeringAttachments'),
+        DictField('OtherAttachments'),
     )
