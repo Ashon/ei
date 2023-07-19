@@ -38,6 +38,14 @@ def extract_from_tag(key: str) -> Callable:
     return _serialize
 
 
+def count(key: str) -> Callable:
+    def _serialize(record: Any, raw_value: Any) -> str:
+        count = len(record.get(key, []))
+        return str(count)
+
+    return _serialize
+
+
 class Field(object):
     _name: str
     serialize: Callable[[Any, Any], str]

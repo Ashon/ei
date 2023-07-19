@@ -10,10 +10,12 @@ from ei.core.fields import TagField
 from ei.core.fields import DictField
 from ei.core.fields import extract_from_tag
 from ei.core.fields import extract
+from ei.core.fields import count
 from ei.services.aws.ec2 import AwsEc2VpcService
 from ei.services.aws.ec2 import AwsEc2SubnetService
 from ei.services.aws.ec2 import AwsEc2InstanceService
 from ei.services.aws.ec2 import AwsEc2AmiService
+from ei.services.aws.ec2 import AwsEc2RouteTableService
 
 
 group = CliGroup(name='ec2', description='AWS EC2')
@@ -77,6 +79,28 @@ class Ec2SubnetCli(BaseCliApp):
         Field('CustomerOwnedIpv4Pool'),
         BooleanField('MapCustomerOwnedIpOnLaunch'),
         DictField('PrivateDnsNameOptionsOnLaunch'),
+    )
+
+
+@group.app
+class Ec2RoutetableCli(BaseCliApp):
+    name: str = 'route-table'
+    description: str = 'EC2 Route Table'
+    service_cls = AwsEc2RouteTableService
+    stats_fields = ['VpcId']
+    short_fields = (
+        IDField('RouteTableId'),
+        Field('Name', serializer=extract_from_tag('Name')),
+        Field('VpcId'),
+        Field('# Associations', serializer=count('Associations')),
+        Field('# RouteTables', serializer=count('Routes')),
+    )
+    long_fields = ()
+    detail_fields = (
+        Field('OwnerId'),
+        DictField('Associations'),
+        DictField('Routes'),
+        TagField('Tags')
     )
 
 
