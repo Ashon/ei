@@ -25,15 +25,15 @@ classifiers = [
 ]
 
 dependencies = [
-  "typer==0.7.0",
-  "boto3==1.26.42",
-  "rich==13.0.0",
-  "mypy-boto3==1.26.42",
-  "mypy-boto3-ec2==1.26.34",
-  "mypy-boto3-elasticache==1.26.11.post1",
-  "mypy-boto3-rds==1.26.47",
-  "mypy-boto3-s3==1.26.58",
-  "mypy-boto3-elbv2==1.26.12"
+  "typer>=0.7.0",
+  "boto3>=1.26.42",
+  "rich>=13.0.0",
+  "mypy-boto3>=1.26.42",
+  "mypy-boto3-ec2>=1.26.34",
+  "mypy-boto3-elasticache>=1.26.11.post1",
+  "mypy-boto3-rds>=1.26.47",
+  "mypy-boto3-s3>=1.26.58",
+  "mypy-boto3-elbv2>=1.26.12"
 ]
 
 dynamic = ["version"]
@@ -43,9 +43,9 @@ devel = [
   "hatch==1.6.3",
   "flake8==5.0.4; python_version < '3.8'",
   "flake8==6.0.0; python_version >= '3.8'",
-  "pytest==7.2.0",
-  "pytest-cov==4.0.0",
-  "mypy==0.991"
+  "pytest>=7.2.0",
+  "pytest-cov>=4.0.0",
+  "mypy>=0.991"
 ]
 
 [project.urls]
