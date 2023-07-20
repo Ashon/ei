@@ -208,7 +208,7 @@ class Ec2TransitGatewayCli(BaseCliApp):
     name: str = 'transit-gateway'
     description: str = 'EC2 Transit Gateway'
     service_cls = AwsEc2TransitGatewayService
-    stats_fields = ['VpcId']
+    stats_fields = []
     short_fields = (
         IDField('TransitGatewayId'),
         Field('Name', serializer=extract_from_tag('Name')),
