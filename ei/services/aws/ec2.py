@@ -15,9 +15,11 @@ from ei.core.service import BaseAwsService
 from ei.core.utils import to_pascal_case
 
 
-class AwsEc2VpcService(BaseAwsService):
+class BaseEC2Service(BaseAwsService):
     service_name = 'ec2'
 
+
+class AwsEc2VpcService(BaseEC2Service):
     @classmethod
     def _list(cls, client: EC2Client) -> Any:
         return client.describe_vpcs()['Vpcs']
@@ -27,9 +29,7 @@ class AwsEc2VpcService(BaseAwsService):
         return client.describe_vpcs(VpcIds=[id])['Vpcs']
 
 
-class AwsEc2SubnetService(BaseAwsService):
-    service_name = 'ec2'
-
+class AwsEc2SubnetService(BaseEC2Service):
     @classmethod
     def _list(cls, client: EC2Client) -> Any:
         return client.describe_subnets()['Subnets']
@@ -39,9 +39,7 @@ class AwsEc2SubnetService(BaseAwsService):
         return client.describe_subnets(SubnetIds=[id])['Subnets']
 
 
-class AwsEc2InstanceService(BaseAwsService):
-    service_name = 'ec2'
-
+class AwsEc2InstanceService(BaseEC2Service):
     @classmethod
     def _list(cls, client: EC2Client) -> Any:
         reservations = client.describe_instances()['Reservations']
@@ -68,9 +66,7 @@ class AwsEc2InstanceService(BaseAwsService):
         return instance
 
 
-class AwsEc2AmiService(BaseAwsService):
-    service_name = 'ec2'
-
+class AwsEc2AmiService(BaseEC2Service):
     @classmethod
     def _list(cls, client: EC2Client) -> Any:
         images = client.describe_images(
@@ -84,9 +80,7 @@ class AwsEc2AmiService(BaseAwsService):
         return image
 
 
-class AwsEc2RouteTableService(BaseAwsService):
-    service_name = 'ec2'
-
+class AwsEc2RouteTableService(BaseEC2Service):
     @classmethod
     def _list(cls, client: EC2Client) -> Any:
         route_tables = client.describe_route_tables()['RouteTables']

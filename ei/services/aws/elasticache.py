@@ -6,9 +6,11 @@ from mypy_boto3_elasticache.client import ElastiCacheClient
 from ei.core.service import BaseAwsService
 
 
-class AwsElasticacheReplicationGroupService(BaseAwsService):
+class BaseElasticacheService(BaseAwsService):
     service_name = 'elasticache'
 
+
+class AwsElasticacheReplicationGroupService(BaseElasticacheService):
     @classmethod
     def _list(cls, client: ElastiCacheClient) -> Any:
         groups = client.describe_replication_groups()['ReplicationGroups']
@@ -22,9 +24,7 @@ class AwsElasticacheReplicationGroupService(BaseAwsService):
         return group
 
 
-class AwsElasticacheCacheClusterService(BaseAwsService):
-    service_name = 'elasticache'
-
+class AwsElasticacheCacheClusterService(BaseElasticacheService):
     @classmethod
     def _list(cls, client: ElastiCacheClient) -> Any:
         paginator = client.get_paginator(
@@ -43,9 +43,7 @@ class AwsElasticacheCacheClusterService(BaseAwsService):
         return clusters
 
 
-class AwsElasticacheEventService(BaseAwsService):
-    service_name = 'elasticache'
-
+class AwsElasticacheEventService(BaseElasticacheService):
     @classmethod
     def _list(cls, client: ElastiCacheClient) -> Any:
         paginator = client.get_paginator(operation_name='describe_events')
