@@ -5,9 +5,11 @@ from mypy_boto3_elbv2 import ElasticLoadBalancingv2Client
 from ei.core.service import BaseAwsService
 
 
-class AwsElbLoadbalancerService(BaseAwsService):
+class BaseElasticLoadBalancerService(BaseAwsService):
     service_name = 'elbv2'
 
+
+class AwsElbLoadbalancerService(BaseElasticLoadBalancerService):
     @classmethod
     def _list(cls, client: ElasticLoadBalancingv2Client) -> Any:
         loadbalancers = client.describe_load_balancers()['LoadBalancers']
@@ -45,9 +47,7 @@ class AwsElbLoadbalancerService(BaseAwsService):
         }]
 
 
-class AwsElbListenerService(BaseAwsService):
-    service_name = 'elbv2'
-
+class AwsElbListenerService(BaseElasticLoadBalancerService):
     @classmethod
     def _list(cls, client: ElasticLoadBalancingv2Client) -> Any:
         listeners = client.describe_listeners()['Listeners']
@@ -70,9 +70,7 @@ class AwsElbListenerService(BaseAwsService):
         }]
 
 
-class AwsElbTargetGroupService(BaseAwsService):
-    service_name = 'elbv2'
-
+class AwsElbTargetGroupService(BaseElasticLoadBalancerService):
     @classmethod
     def _list(cls, client: ElasticLoadBalancingv2Client) -> Any:
         target_groups = client.describe_target_groups()['TargetGroups']
