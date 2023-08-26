@@ -1,13 +1,23 @@
+from typing import List
+
 from itertools import chain
 from typing import Any
 
 from mypy_boto3_elasticache.client import ElastiCacheClient
+from mypy_boto3_elasticache.type_defs import TagTypeDef
 
 from ei.core.service import BaseAwsService
 
 
 class BaseElasticacheService(BaseAwsService):
     service_name = 'elasticache'
+
+    @classmethod
+    def _tags(cls, client: ElastiCacheClient,
+              resource_arn: str) -> List[TagTypeDef]:
+        tags = client.list_tags_for_resource(ResourceName=resource_arn)
+
+        return tags['TagList']
 
 
 class AwsElasticacheReplicationGroupService(BaseElasticacheService):
@@ -23,8 +33,8 @@ class AwsElasticacheReplicationGroupService(BaseElasticacheService):
 
         result = []
         for group in groups:
-            tag = client.list_tags_for_resource(ResourceName=group['ARN'])
-            result.append({**group, 'Tags': tag['TagList']})
+            tags = cls._tags(client, group['ARN'])
+            result.append({**group, 'Tags': tags})
 
         return result
 
@@ -33,9 +43,9 @@ class AwsElasticacheReplicationGroupService(BaseElasticacheService):
         group = client.describe_replication_groups(
             ReplicationGroupId=id)['ReplicationGroups']
 
-        tag = client.list_tags_for_resource(ResourceName=group[0]['ARN'])
+        tags = cls._tags(client, group[0]['ARN'])
 
-        return [{**group[0], 'Tags': tag['TagList']}]
+        return [{**group[0], 'Tags': tags}]
 
 
 class AwsElasticacheCacheClusterService(BaseElasticacheService):
@@ -51,8 +61,8 @@ class AwsElasticacheCacheClusterService(BaseElasticacheService):
 
         result = []
         for group in clusters:
-            tag = client.list_tags_for_resource(ResourceName=group['ARN'])
-            result.append({**group, 'Tags': tag['TagList']})
+            tags = cls._tags(client, group['ARN'])
+            result.append({**group, 'Tags': tags})
 
         return result
 
@@ -61,10 +71,9 @@ class AwsElasticacheCacheClusterService(BaseElasticacheService):
         clusters = client.describe_cache_clusters(
             CacheClusterId=id)['CacheClusters']
 
-        tag = client.list_tags_for_resource(ResourceName=clusters[0]['ARN'])
-        result = {**clusters[0], 'Tags': tag['TagList']}
+        tags = cls._tags(client, clusters[0]['ARN'])
 
-        return [result]
+        return [{**clusters[0], 'Tags': tags}]
 
 
 class AwsElasticacheEventService(BaseElasticacheService):
