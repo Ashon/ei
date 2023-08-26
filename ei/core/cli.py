@@ -179,7 +179,7 @@ class BaseCliApp(Typeable):
             region: str,
             all_regions: bool,
             account_id: str,
-            all_accounts: bool) -> tuple:
+            all_accounts: bool) -> tuple[Field, Field, Field]:
 
         if long:
             fields = self._list_detail_fields
@@ -237,9 +237,7 @@ class BaseCliApp(Typeable):
                 display_fields, results)
 
             if table:
-                display_table = list_table([
-                    field._name for field in display_fields
-                ], serialized_results)
+                display_table = list_table(display_fields, serialized_results)
                 self._console.print(display_table)
 
             if stat:

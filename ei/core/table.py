@@ -4,12 +4,20 @@ from typing import List
 from rich import box
 from rich.table import Table
 
+from ei.core.fields import Field
+from ei.core.fields import IDField
+
 
 DETAIL_FIELDS = ['key', 'value']
 
 
-def list_table(fields: List[str], items: List) -> Table:
-    table = Table(*fields, box=box.ROUNDED)
+def list_table(fields: List[Field], items: List) -> Table:
+    table = Table(box=box.ROUNDED, expand=True)
+    for field in fields:
+        is_idfield = isinstance(field, IDField)
+        table.add_column(
+            field._name, no_wrap=is_idfield,
+            overflow='fold' if is_idfield else 'ellipsis')
 
     for item in items:
         table.add_row(*[v for v in item])
