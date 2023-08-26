@@ -4,6 +4,7 @@ from typing import Any
 from typing import Callable
 from typing import Dict
 from typing import List
+from typing import Tuple
 from typing import Type
 from typing import Iterable
 from typing import Optional
@@ -140,15 +141,15 @@ class BaseCliApp(Typeable):
     service_cls: Type[BaseAwsService]
 
     # fields for list
-    short_fields: tuple
+    short_fields: List[Field]
 
     # additional fields for long list
-    long_fields: tuple
+    long_fields: List[Field]
 
     # more additional fields for show resource
-    detail_fields: tuple = ()
+    detail_fields: List[Field] = []
 
-    stats_fields = ['Region', 'Account']
+    stats_fields: List[str] = ['Region', 'Account']
 
     _service: BaseAwsService
 
@@ -179,14 +180,14 @@ class BaseCliApp(Typeable):
             region: str,
             all_regions: bool,
             account_id: str,
-            all_accounts: bool) -> tuple[Field, Field, Field]:
+            all_accounts: bool) -> Tuple[List[str], List[str], List[Field]]:
 
         if long:
             fields = self._list_detail_fields
         else:
             fields = self.short_fields
 
-        additional_fields = []
+        additional_fields: List[Field] = []
         regions = defaults.EI_REGIONS
         if not all_regions:
             regions = [region]

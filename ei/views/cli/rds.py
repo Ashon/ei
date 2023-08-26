@@ -22,20 +22,20 @@ class Ec2RdsInstanceCli(BaseCliApp):
 
     stats_fields = ['Region', 'Account', 'Engine']
 
-    short_fields = (
+    short_fields = [
         IDField('DBInstanceIdentifier'),
         Field('DBInstanceClass'),
         Field('Engine'),
         Field('EngineVersion'),
         Field('DBInstanceStatus'),
-    )
+    ]
 
-    long_fields = (
+    long_fields = [
         BooleanField('PubliclyAccessible'),
         BooleanField('StorageEncrypted'),
-    )
+    ]
 
-    detail_fields = (
+    detail_fields = [
         Field('AvailabilityZone'),
         Field('AutomaticRestartTime'),
         Field('MasterUsername'),
@@ -110,4 +110,4 @@ class Ec2RdsInstanceCli(BaseCliApp):
         Field('MasterUserSecret'),
         Field('CertificateDetails'),
         TagField('TagList'),
-    )
+    ]

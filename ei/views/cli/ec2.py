@@ -29,7 +29,7 @@ class Ec2VpcCli(BaseCliApp):
 
     service_cls = AwsEc2VpcService
 
-    short_fields = (
+    short_fields = [
         IDField('VpcId'),
         Field('Name', serializer=extract_from_tag('Name')),
         Field('InstanceTenancy'),
@@ -37,12 +37,12 @@ class Ec2VpcCli(BaseCliApp):
         Field('State'),
         Field('DhcpOptionsId'),
         Field('CidrBlock')
-    )
+    ]
 
-    long_fields = (
+    long_fields = [
         DictField('CidrBlockAssociationSet'),
         TagField('Tags')
-    )
+    ]
 
 
 @group.app
@@ -51,7 +51,7 @@ class Ec2SubnetCli(BaseCliApp):
     description: str = 'EC2 Subnet'
     service_cls = AwsEc2SubnetService
 
-    short_fields = (
+    short_fields = [
         IDField('SubnetId'),
         Field('Name', serializer=extract_from_tag('Name')),
         Field('CidrBlock'),
@@ -60,15 +60,15 @@ class Ec2SubnetCli(BaseCliApp):
         BooleanField('MapPublicIpOnLaunch'),
         Field('State'),
         Field('VpcId'),
-    )
+    ]
 
-    long_fields = (
+    long_fields = [
         BooleanField('AssignIpv6AddressOnCreation'),
         DictField('Ipv6CidrBlockAssociationSet'),
         TagField('Tags')
-    )
+    ]
 
-    detail_fields = (
+    detail_fields = [
         Field('SubnetArn'),
         Field('OutpostArn'),
         Field('OwnerId'),
@@ -80,7 +80,7 @@ class Ec2SubnetCli(BaseCliApp):
         Field('CustomerOwnedIpv4Pool'),
         BooleanField('MapCustomerOwnedIpOnLaunch'),
         DictField('PrivateDnsNameOptionsOnLaunch'),
-    )
+    ]
 
 
 @group.app
@@ -89,20 +89,20 @@ class Ec2RoutetableCli(BaseCliApp):
     description: str = 'EC2 Route Table'
     service_cls = AwsEc2RouteTableService
     stats_fields = ['VpcId']
-    short_fields = (
+    short_fields = [
         IDField('RouteTableId'),
         Field('Name', serializer=extract_from_tag('Name')),
         Field('VpcId'),
         Field('# Associations', serializer=count('Associations')),
         Field('# RouteTables', serializer=count('Routes')),
-    )
-    long_fields = ()
-    detail_fields = (
+    ]
+    long_fields = []
+    detail_fields = [
         Field('OwnerId'),
         DictField('Associations'),
         DictField('Routes'),
         TagField('Tags')
-    )
+    ]
 
 
 @group.app
@@ -114,7 +114,7 @@ class Ec2Instance(BaseCliApp):
 
     stats_fields = ['Region', 'Account', 'InstanceType', 'ImageId', 'State']
 
-    short_fields = (
+    short_fields = [
         IDField('InstanceId'),
         Field('Name', serializer=extract_from_tag('Name')),
         Field('ImageId'),
@@ -122,16 +122,16 @@ class Ec2Instance(BaseCliApp):
         Field('PrivateIpAddress'),
         Field('State', serializer=extract('Name')),
         Field('VpcId'),
-    )
+    ]
 
-    long_fields = (
+    long_fields = [
         Field('SubnetId'),
         Field('Hypervisor'),
         Field('Architecture'),
         TagField('Tags')
-    )
+    ]
 
-    detail_fields = (
+    detail_fields = [
         Field('AmiLaunchIndex'),
         Field('LaunchTime'),
         Field('PrivateDnsName'),
@@ -161,7 +161,7 @@ class Ec2Instance(BaseCliApp):
         Field('UsageOperation'),
         Field('UsageOperationUpdateTime'),
         DictField('PrivateDnsNameOptions'),
-    )
+    ]
 
 
 @group.app
@@ -171,24 +171,24 @@ class Ec2Ami(BaseCliApp):
 
     service_cls: Type[BaseAwsService] = AwsEc2AmiService
 
-    short_fields = (
+    short_fields = [
         IDField('ImageId'),
         Field('Name'),
         BooleanField('Public'),
         Field('State'),
         Field('CreationDate'),
-    )
+    ]
 
-    long_fields = (
+    long_fields = [
         Field('Description'),
         Field('ImageType'),
         Field('Hypervisor'),
         Field('Architecture'),
         Field('PlatformDetails'),
         TagField('Tags')
-    )
+    ]
 
-    detail_fields = (
+    detail_fields = [
         Field('UsageOperation'),
         Field('RootDeviceName'),
         Field('RootDeviceType'),
@@ -200,7 +200,7 @@ class Ec2Ami(BaseCliApp):
         Field('OwnerId'),
         DictField('BlockDeviceMappings'),
         Field('ImageOwnerAlias'),
-    )
+    ]
 
 
 @group.app
@@ -209,7 +209,7 @@ class Ec2TransitGatewayCli(BaseCliApp):
     description: str = 'EC2 Transit Gateway'
     service_cls = AwsEc2TransitGatewayService
     stats_fields = []
-    short_fields = (
+    short_fields = [
         IDField('TransitGatewayId'),
         Field('Name', serializer=extract_from_tag('Name')),
         Field('State'),
@@ -218,9 +218,9 @@ class Ec2TransitGatewayCli(BaseCliApp):
         Field('# Att.Peerings', serializer=count('PeeringAttachments')),
         Field('# Att.Others', serializer=count('OtherAttachments')),
         Field('CreationTime'),
-    )
-    long_fields = ()
-    detail_fields = (
+    ]
+    long_fields = []
+    detail_fields = [
         Field('TransitGatewayArn'),
         DictField('Options'),
         DictField('Connects'),
@@ -231,4 +231,4 @@ class Ec2TransitGatewayCli(BaseCliApp):
         DictField('VpcAttachments'),
         DictField('PeeringAttachments'),
         DictField('OtherAttachments'),
-    )
+    ]

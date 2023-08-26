@@ -21,13 +21,13 @@ class S3BucketCli(BaseCliApp):
 
     stats_fields = ['Region', 'Account']
 
-    short_fields = (
+    short_fields = [
         IDField('Name'),
         Field('CreationDate'),
-    )
+    ]
 
-    long_fields = ()
-    detail_fields = (
+    long_fields = []
+    detail_fields = [
         DictField('AccelerateConfiguration'),
         DictField('Acl'),
         DictField('Encryption'),
@@ -50,4 +50,4 @@ class S3BucketCli(BaseCliApp):
         DictField('InventoryConfigurations'),
         DictField('MetricsConfigurations'),
         TagField('Tagging'),
-    )
+    ]
