@@ -87,7 +87,7 @@ class TagField(Field):
             return ''
 
         return '\n'.join([
-            f'[bright_black]{tag["Key"]}[/bright_black]: {tag["Value"]}'
+            f'[yellow]{tag["Key"]}[/yellow]: {tag["Value"]}'
             for tag in raw_value
         ])
 
@@ -98,7 +98,7 @@ class DictField(Field):
             return '[bright_black]None[/bright_black]'
 
         return '\n'.join([
-            f'[bright_black]{key}[/bright_black]: '
+            f'[yellow]{key}[/yellow]: '
             f'{pretty_repr(value) if isinstance(value, Collection) else value}'
             for key, value in obj.items() if key != 'ResponseMetadata'
         ])

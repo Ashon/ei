@@ -73,8 +73,8 @@ def test_tagfield_should_returns_formatted_string() -> None:
     })
 
     assert value == (
-        '[bright_black]name[/bright_black]: john\n'
-        '[bright_black]species[/bright_black]: human'
+        '[yellow]name[/yellow]: john\n'
+        '[yellow]species[/yellow]: human'
     )
 
     value = serializer({'Tags': []})
@@ -90,7 +90,7 @@ def test_dictfield_should_returns_formatted_string() -> None:
         }
     })
 
-    assert value == "[bright_black]Key[/bright_black]: 'Value'"
+    assert value == "[yellow]Key[/yellow]: 'Value'"
 
 
 def test_dictfield_should_returns_formatted_string_when_empty_value() -> None:
@@ -111,7 +111,7 @@ def test_dictfield_should_ignores_response_metadata() -> None:
         'ResponseMetadata': {}
     })
 
-    assert value == "[bright_black]Key[/bright_black]: 'Value'"
+    assert value == "[yellow]Key[/yellow]: 'Value'"
 
 
 def test_dictfield_should_returns_if_dictlist() -> None:
@@ -126,6 +126,6 @@ def test_dictfield_should_returns_if_dictlist() -> None:
     })
 
     assert value == '\n'.join([
-        "- [bright_black]KeyA[/bright_black]: 'ValueA'",
-        "- [bright_black]KeyB[/bright_black]: 'ValueB'"
+        "- [yellow]KeyA[/yellow]: 'ValueA'",
+        "- [yellow]KeyB[/yellow]: 'ValueB'"
     ])
