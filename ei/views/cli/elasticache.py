@@ -25,16 +25,16 @@ class ElasticacheReplicationGroupCli(BaseCliApp):
     stats_fields = [
         'Region', 'Account', 'ClusterEnabled', 'CacheNodeType', 'Status']
 
-    short_fields = (
+    short_fields = [
         IDField('ReplicationGroupId'),
         Field('Status'),
         Field('AutomaticFailover'),
         Field('MultiAZ'),
         BooleanField('ClusterEnabled'),
         Field('CacheNodeType'),
-    )
+    ]
 
-    long_fields = (
+    long_fields = [
         BooleanField('AuthTokenEnabled'),
         BooleanField('TransitEncryptionEnabled'),
         BooleanField('AtRestEncryptionEnabled'),
@@ -46,9 +46,9 @@ class ElasticacheReplicationGroupCli(BaseCliApp):
         Field('PendingModifiedValues'),
         Field('LogDeliveryConfigurations'),
         TagField('Tags')
-    )
+    ]
 
-    detail_fields = (
+    detail_fields = [
         Field('NetworkType'),
         Field('IpDiscovery'),
         Field('ARN'),
@@ -56,7 +56,7 @@ class ElasticacheReplicationGroupCli(BaseCliApp):
         Field('Description'),
         DictField('NodeGroups'),
         Field('MemberClusters'),
-    )
+    ]
 
 
 @group.app
@@ -69,25 +69,25 @@ class ElasticacheCacheClusterCli(BaseCliApp):
 
     stats_fields = ['Region', 'Account', 'Engine']
 
-    short_fields = (
+    short_fields = [
         IDField('CacheClusterId'),
         Field('CacheNodeType'),
         Field('Engine'),
         Field('EngineVersion'),
         Field('CacheClusterStatus'),
         Field('NumCacheNodes'),
-    )
+    ]
 
-    long_fields = (
+    long_fields = [
         Field('CacheSubnetGroupName'),
         Field('ReplicationGroupId'),
         Field('PreferredAvailabilityZone'),
         Field('PreferredMaintenanceWindow'),
         Field('CacheClusterCreateTime'),
         TagField('Tags')
-    )
+    ]
 
-    detail_fields = (
+    detail_fields = [
         Field('ARN'),
         BooleanField('AuthTokenEnabled'),
         BooleanField('TransitEncryptionEnabled'),
@@ -104,7 +104,7 @@ class ElasticacheCacheClusterCli(BaseCliApp):
         DictField('PendingModifiedValues'),
         Field('CacheSecurityGroups'),
         Field('ClientDownloadLandingPage'),
-    )
+    ]
 
 
 @group.app
@@ -114,12 +114,12 @@ class ElasticacheEventCli(BaseCliApp):
 
     service_cls = AwsElasticacheEventService
 
-    short_fields = (
+    short_fields = [
         Field('SourceIdentifier'),
         Field('SourceType'),
         Field('Message'),
         Field('Date'),
-    )
+    ]
 
-    long_fields = ()
-    detail_fields = ()
+    long_fields = []
+    detail_fields = []

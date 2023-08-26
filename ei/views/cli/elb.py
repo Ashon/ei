@@ -24,21 +24,21 @@ class ElbLoadbalancerCli(BaseCliApp):
 
     stats_fields = ['Region', 'Account', 'Type']
 
-    short_fields = (
+    short_fields = [
         IDField('LoadBalancerArn'),
         Field('LoadBalancerName'),
         Field('State', serializer=extract('Code')),
         Field('Type'),
-    )
+    ]
 
-    long_fields = (
+    long_fields = [
         Field('IpAddressType'),
         Field('Scheme'),
         Field('CreatedTime'),
         Field('CanonicalHostedZoneId'),
-    )
+    ]
 
-    detail_fields = (
+    detail_fields = [
         Field('VpcId'),
         Field('DNSName'),
         DictField('Attributes'),
@@ -46,7 +46,7 @@ class ElbLoadbalancerCli(BaseCliApp):
         DictField('Listeners'),
         DictField('TargetGroups'),
         TagField('Tags')
-    )
+    ]
 
 
 @group.app
@@ -56,21 +56,21 @@ class ElbListenerCli(BaseCliApp):
 
     service_cls = AwsElbListenerService
 
-    short_fields = (
+    short_fields = [
         IDField('ListenerArn'),
         Field('LoadBalancerArn'),
         Field('Port'),
         Field('Protocol'),
-    )
+    ]
 
-    long_fields = ()
+    long_fields = []
 
-    detail_fields = (
+    detail_fields = [
         DictField('DefaultActions'),
         DictField('Certificates'),
         DictField('Rules'),
         TagField('Tags')
-    )
+    ]
 
 
 @group.app
@@ -80,16 +80,16 @@ class ElbTargetGroupCli(BaseCliApp):
 
     service_cls = AwsElbTargetGroupService
 
-    short_fields = (
+    short_fields = [
         IDField('TargetGroupArn'),
         Field('TargetGroupName'),
         Field('Protocol'),
         Field('Port'),
         BooleanField('HealthCheckEnabled'),
         Field('TargetType'),
-    )
+    ]
 
-    long_fields = (
+    long_fields = [
         Field('HealthCheckProtocol'),
         Field('HealthCheckPort'),
         Field('HealthCheckIntervalSeconds'),
@@ -97,9 +97,9 @@ class ElbTargetGroupCli(BaseCliApp):
         Field('HealthyThresholdCount'),
         Field('UnhealthyThresholdCount'),
         Field('HealthCheckPath'),
-    )
+    ]
 
-    detail_fields = (
+    detail_fields = [
         Field('VpcId'),
         Field('ProtocolVersion'),
         Field('IpAddressType'),
@@ -109,4 +109,4 @@ class ElbTargetGroupCli(BaseCliApp):
         DictField('Certificates'),
         DictField('Rules'),
         TagField('Tags')
-    )
+    ]

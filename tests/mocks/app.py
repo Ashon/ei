@@ -40,8 +40,8 @@ class DummyAwsCli(BaseCliApp):
 
     service_cls = DummyAwsService
     stats_fields = ['type']
-    short_fields = (
+    short_fields = [
         Field('name'),
-    )
+    ]
 
-    long_fields = ()
+    long_fields = []
