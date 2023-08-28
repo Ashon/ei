@@ -14,15 +14,19 @@ def with_dummy(account_id: str, region: str, service_name: str) -> Generator:
     yield ''
 
 
-ITEMS = [
-    {'name': 'item-a', 'type': 'a'},
-    {'name': 'item-b', 'type': 'a'},
-    {'name': 'item-c', 'type': 'b'},
-]
+ITEMS = {
+    'resources': [
+        {'name': 'item-a', 'type': 'a'},
+        {'name': 'item-b', 'type': 'a'},
+        {'name': 'item-c', 'type': 'b'},
+    ]
+}
 
 
 class DummyAwsService(BaseAwsService):
     service_name: str = 'dummy'
+    resource_name: str = 'resources'
+
     _sessioncontext: Callable[..., _GeneratorContextManager] = with_dummy
 
     @classmethod
@@ -31,8 +35,10 @@ class DummyAwsService(BaseAwsService):
 
     @classmethod
     def _show(cls, client: Any, id: str) -> Any:
-        found_item = [item for item in ITEMS if item['name'] == id]
-        return found_item
+        found_item = [
+            item for item in ITEMS['resources'] if item['name'] == id
+        ]
+        return {'resources': found_item}
 
 
 class DummyAwsCli(BaseCliApp):

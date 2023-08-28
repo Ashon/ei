@@ -43,14 +43,15 @@ S3_PROPERTY_FETCHER = {
 
 class AwsS3BucketService(BaseAwsService):
     service_name = 's3'
+    resource_name = 'Buckets'
 
     @classmethod
     def _list(cls, client: S3Client) -> Any:
-        return client.list_buckets()['Buckets']
+        return client.list_buckets()
 
     @classmethod
     def _show(cls, client: S3Client, id: str) -> Any:
-        bucket_list = cls._list(client)
+        bucket_list = cls._list(client)['Buckets']
         found_bucket = [b for b in bucket_list if b['Name'] == id]
         if not found_bucket:
             raise BucketNotFoundError(id)
@@ -70,4 +71,4 @@ class AwsS3BucketService(BaseAwsService):
         if bucket.get('Policy'):
             bucket['Policy'] = json.loads(bucket['Policy'].get('Policy', '{}'))
 
-        return [bucket]
+        return {'Buckets': [bucket]}

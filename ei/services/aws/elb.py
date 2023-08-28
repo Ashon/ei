@@ -10,9 +10,11 @@ class BaseElasticLoadBalancerService(BaseAwsService):
 
 
 class AwsElbLoadbalancerService(BaseElasticLoadBalancerService):
+    resource_name = 'LoadBalancers'
+
     @classmethod
     def _list(cls, client: ElasticLoadBalancingv2Client) -> Any:
-        loadbalancers = client.describe_load_balancers()['LoadBalancers']
+        loadbalancers = client.describe_load_balancers()
         return loadbalancers
 
     @classmethod
@@ -38,19 +40,23 @@ class AwsElbLoadbalancerService(BaseElasticLoadBalancerService):
         tags = client.describe_tags(
             ResourceArns=[id])['TagDescriptions'][0]['Tags']
 
-        return [{
-            **loadbalancer[0],
-            'Attributes': attributes.get('Attributes'),
-            'Listeners': listeners.get('Listeners'),
-            'TargetGroups': target_groups.get('TargetGroups'),
-            'Tags': tags
-        }]
+        return {
+            'LoadBalancers': [{
+                **loadbalancer[0],
+                'Attributes': attributes.get('Attributes'),
+                'Listeners': listeners.get('Listeners'),
+                'TargetGroups': target_groups.get('TargetGroups'),
+                'Tags': tags
+            }]
+        }
 
 
 class AwsElbListenerService(BaseElasticLoadBalancerService):
+    resource_name = 'Listeners'
+
     @classmethod
     def _list(cls, client: ElasticLoadBalancingv2Client) -> Any:
-        listeners = client.describe_listeners()['Listeners']
+        listeners = client.describe_listeners()
         return listeners
 
     @classmethod
@@ -62,18 +68,22 @@ class AwsElbListenerService(BaseElasticLoadBalancerService):
         tags = client.describe_tags(
             ResourceArns=[id])['TagDescriptions'][0]['Tags']
 
-        return [{
-            **listener[0],
-            'Certificates': certificates.get('Certificates'),
-            'Rules': rules.get('Rules'),
-            'Tags': tags
-        }]
+        return {
+            'Listeners': [{
+                **listener[0],
+                'Certificates': certificates.get('Certificates'),
+                'Rules': rules.get('Rules'),
+                'Tags': tags
+            }]
+        }
 
 
 class AwsElbTargetGroupService(BaseElasticLoadBalancerService):
+    resource_name = 'TargetGroups'
+
     @classmethod
     def _list(cls, client: ElasticLoadBalancingv2Client) -> Any:
-        target_groups = client.describe_target_groups()['TargetGroups']
+        target_groups = client.describe_target_groups()
         return target_groups
 
     @classmethod
@@ -87,9 +97,11 @@ class AwsElbTargetGroupService(BaseElasticLoadBalancerService):
         tags = client.describe_tags(
             ResourceArns=[id])['TagDescriptions'][0]['Tags']
 
-        return [{
-            **target_group[0],
-            'Certificates': attributes.get('Attributes'),
-            'Rules': health.get('TargetHealthDescriptions'),
-            'Tags': tags
-        }]
+        return {
+            'TargetGroups': [{
+                **target_group[0],
+                'Certificates': attributes.get('Attributes'),
+                'Rules': health.get('TargetHealthDescriptions'),
+                'Tags': tags
+            }]
+        }
