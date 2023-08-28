@@ -33,7 +33,8 @@ from ei.core.server import start_server
 TOPK = 10
 
 
-def create_application(apps: List['Typeable']) -> Typer:
+def create_application(apps: List['Typeable'],
+                       service_classes: List[Type[BaseAwsService]]) -> Typer:
     cli = CliGroup(
         name='ei',
         description=(
@@ -53,10 +54,8 @@ def create_application(apps: List['Typeable']) -> Typer:
     @typer.command(help='Run HTTP Server')
     def runserver(
             listen_addr: str = Option(
-                'localhost:8000', help='Server listen address'),
-            debug: bool = Option(
-                False, help='Start server with debug mode')) -> None:
-        start_server(listen_addr, debug)
+                'localhost:8000', help='Server listen address')) -> None:
+        start_server(service_classes, listen_addr)
 
     return typer
 
