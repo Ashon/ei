@@ -1,5 +1,7 @@
 import os
 from typing import Any
+from typing import List
+from typing import Type
 from typing import Optional
 
 import uvicorn
@@ -12,43 +14,9 @@ import ei
 from ei.core import defaults
 from ei.core.concurrency import bulk_action
 from ei.core.service import BaseAwsService
-from ei.services.aws.ec2 import AwsEc2VpcService
-from ei.services.aws.ec2 import AwsEc2SubnetService
-from ei.services.aws.ec2 import AwsEc2InstanceService
-from ei.services.aws.ec2 import AwsEc2AmiService
-from ei.services.aws.ec2 import AwsEc2RouteTableService
-from ei.services.aws.ec2 import AwsEc2TransitGatewayService
-from ei.services.aws.ec2 import AwsEc2SecurityGroupService
-from ei.services.aws.elasticache import AwsElasticacheReplicationGroupService
-from ei.services.aws.elasticache import AwsElasticacheCacheClusterService
-from ei.services.aws.elasticache import AwsElasticacheEventService
-from ei.services.aws.elb import AwsElbLoadbalancerService
-from ei.services.aws.elb import AwsElbListenerService
-from ei.services.aws.elb import AwsElbTargetGroupService
-from ei.services.aws.rds import AwsRdsInstanceService
-from ei.services.aws.s3 import AwsS3BucketService
 
 
 ROOT_DIR = os.path.dirname(ei.__file__)
-
-
-SERVICE_CLASSES = [
-    AwsEc2VpcService,
-    AwsEc2SubnetService,
-    AwsEc2InstanceService,
-    AwsEc2AmiService,
-    AwsEc2RouteTableService,
-    AwsEc2TransitGatewayService,
-    AwsEc2SecurityGroupService,
-    AwsElasticacheReplicationGroupService,
-    AwsElasticacheCacheClusterService,
-    AwsElasticacheEventService,
-    AwsElbLoadbalancerService,
-    AwsElbListenerService,
-    AwsElbTargetGroupService,
-    AwsRdsInstanceService,
-    AwsS3BucketService
-]
 
 
 class Config(BaseSettings):
@@ -107,13 +75,13 @@ def create_service_router(service: BaseAwsService) -> APIRouter:
     return router
 
 
-def create_server() -> FastAPI:
+def create_server(service_classes: List[Type[BaseAwsService]]) -> FastAPI:
     app = FastAPI(
         title='EI',
         description='AWS Retrieve API'
     )
 
-    for service_cls in SERVICE_CLASSES:
+    for service_cls in service_classes:
         service = service_cls()
         app.include_router(
             prefix='/api',
@@ -123,21 +91,21 @@ def create_server() -> FastAPI:
     return app
 
 
-def start_server(listen_addr: str, debug: bool) -> None:
+def start_server(service_classes: List[Type[BaseAwsService]],
+                 listen_addr: str) -> None:
     """Start ei http server
     """
 
     config = Config()
 
     listen_host, listen_port = listen_addr.split(':')
-    asgi = create_server
+    asgi = create_server(service_classes)
 
     uvicorn.run(
-        f'{asgi.__module__}:{asgi.__qualname__}',
+        asgi,
         log_level=config.log_level.lower(),
         loop='uvloop',
         host=listen_host,
         port=int(listen_port),
-        reload=debug,
-        reload_dirs=[ROOT_DIR]
+        reload_dirs=[ROOT_DIR],
     )
