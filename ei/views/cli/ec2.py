@@ -17,6 +17,7 @@ from ei.services.aws.ec2 import AwsEc2InstanceService
 from ei.services.aws.ec2 import AwsEc2AmiService
 from ei.services.aws.ec2 import AwsEc2RouteTableService
 from ei.services.aws.ec2 import AwsEc2TransitGatewayService
+from ei.services.aws.ec2 import AwsEc2SecurityGroupService
 
 
 group = CliGroup(name='ec2', description='AWS EC2')
@@ -101,6 +102,29 @@ class Ec2RoutetableCli(BaseCliApp):
         Field('OwnerId'),
         DictField('Associations'),
         DictField('Routes'),
+        TagField('Tags')
+    ]
+
+
+@group.app
+class Ec2SecurityGroupCli(BaseCliApp):
+    name: str = 'security-group'
+    description: str = 'EC2 VPC Security Group'
+    service_cls = AwsEc2SecurityGroupService
+    stats_fields = ['Region', 'Account', 'VpcId']
+    short_fields = [
+        IDField('GroupId'),
+        Field('GroupName'),
+        Field('VpcId'),
+        Field('# Inbound', serializer=count('IpPermissions')),
+        Field('# Outbound', serializer=count('IpPermissionsEgress')),
+    ]
+    long_fields = [
+        Field('Description'),
+    ]
+    detail_fields = [
+        DictField('IpPermissions'),
+        DictField('IpPermissionsEgress'),
         TagField('Tags')
     ]
 

@@ -39,6 +39,16 @@ class AwsEc2SubnetService(BaseEC2Service):
         return client.describe_subnets(SubnetIds=[id])['Subnets']
 
 
+class AwsEc2SecurityGroupService(BaseEC2Service):
+    @classmethod
+    def _list(cls, client: EC2Client) -> Any:
+        return client.describe_security_groups()['SecurityGroups']
+
+    @classmethod
+    def _show(cls, client: EC2Client, id: str) -> Any:
+        return client.describe_security_groups(GroupIds=[id])['SecurityGroups']
+
+
 class AwsEc2InstanceService(BaseEC2Service):
     @classmethod
     def _list(cls, client: EC2Client) -> Any:
