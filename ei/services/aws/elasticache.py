@@ -21,6 +21,8 @@ class BaseElasticacheService(BaseAwsService):
 
 
 class AwsElasticacheReplicationGroupService(BaseElasticacheService):
+    resource_name = 'ReplicationGroups'
+
     @classmethod
     def _list(cls, client: ElastiCacheClient) -> Any:
         paginator = client.get_paginator(
@@ -36,7 +38,7 @@ class AwsElasticacheReplicationGroupService(BaseElasticacheService):
             tags = cls._tags(client, group['ARN'])
             result.append({**group, 'Tags': tags})
 
-        return result
+        return {'ReplicationGroups': result}
 
     @classmethod
     def _show(cls, client: ElastiCacheClient, id: str) -> Any:
@@ -45,10 +47,12 @@ class AwsElasticacheReplicationGroupService(BaseElasticacheService):
 
         tags = cls._tags(client, group[0]['ARN'])
 
-        return [{**group[0], 'Tags': tags}]
+        return {'ReplicationGroups': [{**group[0], 'Tags': tags}]}
 
 
 class AwsElasticacheCacheClusterService(BaseElasticacheService):
+    resource_name = 'CacheClusters'
+
     @classmethod
     def _list(cls, client: ElastiCacheClient) -> Any:
         paginator = client.get_paginator(
@@ -64,7 +68,7 @@ class AwsElasticacheCacheClusterService(BaseElasticacheService):
             tags = cls._tags(client, group['ARN'])
             result.append({**group, 'Tags': tags})
 
-        return result
+        return {'CacheClusters': result}
 
     @classmethod
     def _show(cls, client: ElastiCacheClient, id: str) -> Any:
@@ -73,10 +77,12 @@ class AwsElasticacheCacheClusterService(BaseElasticacheService):
 
         tags = cls._tags(client, clusters[0]['ARN'])
 
-        return [{**clusters[0], 'Tags': tags}]
+        return {'CacheClusters': [{**clusters[0], 'Tags': tags}]}
 
 
 class AwsElasticacheEventService(BaseElasticacheService):
+    resource_name = 'Events'
+
     @classmethod
     def _list(cls, client: ElastiCacheClient) -> Any:
         paginator = client.get_paginator(operation_name='describe_events')
@@ -84,7 +90,7 @@ class AwsElasticacheEventService(BaseElasticacheService):
             page['Events']
             for page in paginator.paginate(Duration=60 * 24)
         ])
-        return events
+        return {'Events': events}
 
     # @classmethod
     # def _show(cls, client: ElastiCacheClient, id: str) -> Any:

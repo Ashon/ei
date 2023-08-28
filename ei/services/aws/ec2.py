@@ -20,36 +20,44 @@ class BaseEC2Service(BaseAwsService):
 
 
 class AwsEc2VpcService(BaseEC2Service):
+    resource_name = 'Vpcs'
+
     @classmethod
     def _list(cls, client: EC2Client) -> Any:
-        return client.describe_vpcs()['Vpcs']
+        return client.describe_vpcs()
 
     @classmethod
     def _show(cls, client: EC2Client, id: str) -> Any:
-        return client.describe_vpcs(VpcIds=[id])['Vpcs']
+        return client.describe_vpcs(VpcIds=[id])
 
 
 class AwsEc2SubnetService(BaseEC2Service):
+    resource_name = 'Subnets'
+
     @classmethod
     def _list(cls, client: EC2Client) -> Any:
-        return client.describe_subnets()['Subnets']
+        return client.describe_subnets()
 
     @classmethod
     def _show(cls, client: EC2Client, id: str) -> Any:
-        return client.describe_subnets(SubnetIds=[id])['Subnets']
+        return client.describe_subnets(SubnetIds=[id])
 
 
 class AwsEc2SecurityGroupService(BaseEC2Service):
+    resource_name = 'SecurityGroups'
+
     @classmethod
     def _list(cls, client: EC2Client) -> Any:
-        return client.describe_security_groups()['SecurityGroups']
+        return client.describe_security_groups()
 
     @classmethod
     def _show(cls, client: EC2Client, id: str) -> Any:
-        return client.describe_security_groups(GroupIds=[id])['SecurityGroups']
+        return client.describe_security_groups(GroupIds=[id])
 
 
 class AwsEc2InstanceService(BaseEC2Service):
+    resource_name = 'Instances'
+
     @classmethod
     def _list(cls, client: EC2Client) -> Any:
         reservations = client.describe_instances()['Reservations']
@@ -60,7 +68,7 @@ class AwsEc2InstanceService(BaseEC2Service):
 
         iterable = chain(*instances)
 
-        return iterable
+        return {'Instances': iterable}
 
     @classmethod
     def _show(cls, client: EC2Client, id: str) -> Any:
@@ -71,35 +79,39 @@ class AwsEc2InstanceService(BaseEC2Service):
         instance = [
             reservation['Instances']
             for reservation in reservations
-        ][0]
+        ]
 
-        return instance
+        return {'Instances': instance}
 
 
 class AwsEc2AmiService(BaseEC2Service):
+    resource_name = 'Images'
+
     @classmethod
     def _list(cls, client: EC2Client) -> Any:
         images = client.describe_images(
-            Owners=defaults.EI_ACCOUNT_IDS)['Images']
+            Owners=defaults.EI_ACCOUNT_IDS)
         return images
 
     @classmethod
     def _show(cls, client: EC2Client, id: str) -> Any:
-        image = client.describe_images(ImageIds=[id])['Images']
+        image = client.describe_images(ImageIds=[id])
 
         return image
 
 
 class AwsEc2RouteTableService(BaseEC2Service):
+    resource_name = 'RouteTables'
+
     @classmethod
     def _list(cls, client: EC2Client) -> Any:
-        route_tables = client.describe_route_tables()['RouteTables']
+        route_tables = client.describe_route_tables()
         return route_tables
 
     @classmethod
     def _show(cls, client: EC2Client, id: str) -> Any:
         route_table = client.describe_route_tables(
-            RouteTableIds=[id])['RouteTables']
+            RouteTableIds=[id])
 
         return route_table
 
@@ -108,8 +120,8 @@ class TransitGatewayNotFoundError(ResourceNotfoundError):
     pass
 
 
-class AwsEc2TransitGatewayService(BaseAwsService):
-    service_name = 'ec2'
+class AwsEc2TransitGatewayService(BaseEC2Service):
+    resource_name = 'TransitGateways'
 
     TRANSIT_GATEWAY_ADDITIONAL_PROPERTIES = [
         # 'connect_peers',
@@ -128,7 +140,7 @@ class AwsEc2TransitGatewayService(BaseAwsService):
             cls._populate_transit_gateway(client, transit_gateway)
             for transit_gateway in transit_gateways
         ]
-        return populated_gateways
+        return {'TransitGateways': populated_gateways}
 
     @classmethod
     def _show(cls, client: EC2Client, id: str) -> Any:
@@ -142,7 +154,7 @@ class AwsEc2TransitGatewayService(BaseAwsService):
         populated_transit_gateway = cls._populate_transit_gateway(
             client, found_transit_gateway)
 
-        return [populated_transit_gateway]
+        return {'TransitGateways': [populated_transit_gateway]}
 
     @classmethod
     def _populate_transit_gateway(
@@ -178,10 +190,14 @@ class AwsEc2TransitGatewayService(BaseAwsService):
                         item.pop(keyword)
 
                 if result_tags:
-                    item['Name'] = [
+                    name_tag = [
                         tag for tag in result_tags
                         if tag['Key'] == 'Name'
-                    ][0]['Value']
+                    ]
+                    if name_tag:
+                        item['Name'] = name_tag[0]['Value']
+                    else:
+                        item['Name'] = ''
 
             populated_transit_gateway[to_pascal_case(property)] = result
 

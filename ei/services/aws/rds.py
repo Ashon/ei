@@ -7,12 +7,13 @@ from ei.core.service import BaseAwsService
 
 class AwsRdsInstanceService(BaseAwsService):
     service_name = 'rds'
+    resource_name = 'DBInstances'
 
     @classmethod
     def _list(cls, client: RDSClient) -> Any:
-        return client.describe_db_instances()['DBInstances']
+        return client.describe_db_instances()
 
     @classmethod
     def _show(cls, client: RDSClient, id: str) -> Any:
         return client.describe_db_instances(
-            DBInstanceIdentifier=id)['DBInstances']
+            DBInstanceIdentifier=id)

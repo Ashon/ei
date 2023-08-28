@@ -11,6 +11,8 @@ from ei.core.session import client_session
 
 class BaseAwsService(object):
     service_name: str
+    resource_name: str
+
     _sessioncontext: Callable[..., _GeneratorContextManager] = client_session
 
     @classmethod
@@ -64,10 +66,10 @@ class BaseAwsService(object):
                 account_id=account_id, region=region,
                 service_name=cls.service_name) as client:
 
-            result = fn(client, *args, **kwargs)
+            response = fn(client, *args, **kwargs)
             result = [
                 {'Region': region, 'Account': account_id, **obj}
-                for obj in result
+                for obj in response[cls.resource_name]
             ]
 
         return result
