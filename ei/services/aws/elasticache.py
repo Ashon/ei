@@ -36,7 +36,7 @@ class AwsElasticacheReplicationGroupService(BaseElasticacheService):
         result = []
         for group in groups:
             tags = cls._tags(client, group['ARN'])
-            result.append({**group, 'Tags': tags})
+            result.append({**group.__dict__, 'Tags': tags})
 
         return {'ReplicationGroups': result}
 
@@ -66,7 +66,7 @@ class AwsElasticacheCacheClusterService(BaseElasticacheService):
         result = []
         for group in clusters:
             tags = cls._tags(client, group['ARN'])
-            result.append({**group, 'Tags': tags})
+            result.append({**group.__dict__, 'Tags': tags})
 
         return {'CacheClusters': result}
 

@@ -54,10 +54,10 @@ class AwsElbLoadbalancerService(BaseElasticLoadBalancerService):
 class AwsElbListenerService(BaseElasticLoadBalancerService):
     resource_name = 'Listeners'
 
-    @classmethod
-    def _list(cls, client: ElasticLoadBalancingv2Client) -> Any:
-        listeners = client.describe_listeners()
-        return listeners
+    # @classmethod
+    # def _list(cls, client: ElasticLoadBalancingv2Client) -> Any:
+    #     listeners = client.describe_listeners()
+    #     return listeners
 
     @classmethod
     def _show(cls, client: ElasticLoadBalancingv2Client, id: str) -> Any:
