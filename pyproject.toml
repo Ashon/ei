@@ -33,7 +33,14 @@ dependencies = [
   "mypy-boto3-elasticache>=1.26.11.post1",
   "mypy-boto3-rds>=1.26.47",
   "mypy-boto3-s3>=1.26.58",
-  "mypy-boto3-elbv2>=1.26.12"
+  "mypy-boto3-elbv2>=1.26.12",
+
+  # Server Dependencies
+  "fastapi>=0.103.0",
+  "pydantic-settings>=2.0.3",
+  "uvicorn>=0.22.0; python_version < '3.8'",
+  "uvicorn>=0.23.2; python_version >= '3.8'",
+  "uvloop>=0.17.0"
 ]
 
 dynamic = ["version"]
@@ -45,7 +52,8 @@ devel = [
   "flake8==6.0.0; python_version >= '3.8'",
   "pytest>=7.2.0",
   "pytest-cov>=4.0.0",
-  "mypy>=0.991"
+  "mypy>=1.4.1; python_version < '3.8'",
+  "mypy>=1.5.1; python_version >= '3.8'"
 ]
 
 [project.urls]

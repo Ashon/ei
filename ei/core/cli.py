@@ -11,6 +11,7 @@ from typing import Optional
 
 from typer import Exit
 from typer import Typer
+from typer import Option
 from rich import print_json
 from rich.console import Console
 from botocore.exceptions import ClientError
@@ -26,6 +27,7 @@ from ei.core.exceptions import WrongRegionError
 from ei.core.exceptions import WrongAccountError
 from ei.core.table import list_table
 from ei.core.table import detail_table
+from ei.core.server import start_server
 
 
 TOPK = 10
@@ -47,6 +49,14 @@ def create_application(apps: List['Typeable']) -> Typer:
     def config() -> None:
         console = Console()
         console.print(defaults.print_config())
+
+    @typer.command(help='Run HTTP Server')
+    def runserver(
+            listen_addr: str = Option(
+                'localhost:8000', help='Server listen address'),
+            debug: bool = Option(
+                False, help='Start server with debug mode')) -> None:
+        start_server(listen_addr, debug)
 
     return typer
 
