@@ -19,12 +19,10 @@ group = CliGroup(name='elasticache', description='AWS Elasticache')
 class ElasticacheReplicationGroupCli(BaseCliApp):
     name: str = 'replicationgroup'
     description: str = 'Elasticache replication group'
-
     service_cls: Type[BaseAwsService] = AwsElasticacheReplicationGroupService
-
     stats_fields = [
-        'Region', 'Account', 'ClusterEnabled', 'CacheNodeType', 'Status']
-
+        'Region', 'Account', 'ClusterEnabled', 'CacheNodeType', 'Status'
+    ]
     short_fields = [
         IDField('ReplicationGroupId'),
         Field('Status'),
@@ -33,7 +31,6 @@ class ElasticacheReplicationGroupCli(BaseCliApp):
         BooleanField('ClusterEnabled'),
         Field('CacheNodeType'),
     ]
-
     long_fields = [
         BooleanField('AuthTokenEnabled'),
         BooleanField('TransitEncryptionEnabled'),
@@ -47,7 +44,6 @@ class ElasticacheReplicationGroupCli(BaseCliApp):
         Field('LogDeliveryConfigurations'),
         TagField('Tags')
     ]
-
     detail_fields = [
         Field('NetworkType'),
         Field('IpDiscovery'),
@@ -63,12 +59,9 @@ class ElasticacheReplicationGroupCli(BaseCliApp):
 class ElasticacheCacheClusterCli(BaseCliApp):
     name: str = 'cachecluster'
     description: str = 'Elasticache cache cluster'
-
     service_cls: Type[AwsElasticacheCacheClusterService] = (
         AwsElasticacheCacheClusterService)
-
     stats_fields = ['Region', 'Account', 'Engine']
-
     short_fields = [
         IDField('CacheClusterId'),
         Field('CacheNodeType'),
@@ -77,7 +70,6 @@ class ElasticacheCacheClusterCli(BaseCliApp):
         Field('CacheClusterStatus'),
         Field('NumCacheNodes'),
     ]
-
     long_fields = [
         Field('CacheSubnetGroupName'),
         Field('ReplicationGroupId'),
@@ -86,7 +78,6 @@ class ElasticacheCacheClusterCli(BaseCliApp):
         Field('CacheClusterCreateTime'),
         TagField('Tags')
     ]
-
     detail_fields = [
         Field('ARN'),
         BooleanField('AuthTokenEnabled'),
@@ -111,15 +102,12 @@ class ElasticacheCacheClusterCli(BaseCliApp):
 class ElasticacheEventCli(BaseCliApp):
     name: str = 'event'
     description: str = 'Elasticache event'
-
     service_cls = AwsElasticacheEventService
-
     short_fields = [
         Field('SourceIdentifier'),
         Field('SourceType'),
         Field('Message'),
         Field('Date'),
     ]
-
     long_fields = []
     detail_fields = []

@@ -19,25 +19,20 @@ group = CliGroup(name='elb', description='AWS ElasticLoadbalancer')
 class ElbLoadbalancerCli(BaseCliApp):
     name: str = 'loadbalancer'
     description: str = 'ElasticLoadbalancer Loadbalander'
-
     service_cls = AwsElbLoadbalancerService
-
     stats_fields = ['Region', 'Account', 'Type']
-
     short_fields = [
         IDField('LoadBalancerArn'),
         Field('LoadBalancerName'),
         Field('State', serializer=extract('Code')),
         Field('Type'),
     ]
-
     long_fields = [
         Field('IpAddressType'),
         Field('Scheme'),
         Field('CreatedTime'),
         Field('CanonicalHostedZoneId'),
     ]
-
     detail_fields = [
         Field('VpcId'),
         Field('DNSName'),
@@ -53,18 +48,14 @@ class ElbLoadbalancerCli(BaseCliApp):
 class ElbListenerCli(BaseCliApp):
     name: str = 'listener'
     description: str = 'ElasticLoadbalancer Listener'
-
     service_cls = AwsElbListenerService
-
     short_fields = [
         IDField('ListenerArn'),
         Field('LoadBalancerArn'),
         Field('Port'),
         Field('Protocol'),
     ]
-
     long_fields = []
-
     detail_fields = [
         DictField('DefaultActions'),
         DictField('Certificates'),
@@ -77,9 +68,7 @@ class ElbListenerCli(BaseCliApp):
 class ElbTargetGroupCli(BaseCliApp):
     name: str = 'targetgroup'
     description: str = 'ElasticLoadbalancer TargetGroup'
-
     service_cls = AwsElbTargetGroupService
-
     short_fields = [
         IDField('TargetGroupArn'),
         Field('TargetGroupName'),
@@ -88,7 +77,6 @@ class ElbTargetGroupCli(BaseCliApp):
         BooleanField('HealthCheckEnabled'),
         Field('TargetType'),
     ]
-
     long_fields = [
         Field('HealthCheckProtocol'),
         Field('HealthCheckPort'),
@@ -98,7 +86,6 @@ class ElbTargetGroupCli(BaseCliApp):
         Field('UnhealthyThresholdCount'),
         Field('HealthCheckPath'),
     ]
-
     detail_fields = [
         Field('VpcId'),
         Field('ProtocolVersion'),
