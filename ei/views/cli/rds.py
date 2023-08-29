@@ -17,11 +17,8 @@ group = CliGroup(name='rds', description='AWS RDS')
 class Ec2RdsInstanceCli(BaseCliApp):
     name: str = 'instance'
     description: str = 'EC2 RDS'
-
     service_cls = AwsRdsInstanceService
-
     stats_fields = ['Region', 'Account', 'Engine']
-
     short_fields = [
         IDField('DBInstanceIdentifier'),
         Field('DBInstanceClass'),
@@ -29,12 +26,10 @@ class Ec2RdsInstanceCli(BaseCliApp):
         Field('EngineVersion'),
         Field('DBInstanceStatus'),
     ]
-
     long_fields = [
         BooleanField('PubliclyAccessible'),
         BooleanField('StorageEncrypted'),
     ]
-
     detail_fields = [
         Field('AvailabilityZone'),
         Field('AutomaticRestartTime'),

@@ -16,16 +16,12 @@ group = CliGroup(name='s3', description='AWS S3')
 class S3BucketCli(BaseCliApp):
     name: str = 'bucket'
     description: str = 'S3 Bucket'
-
     service_cls = AwsS3BucketService
-
     stats_fields = ['Region', 'Account']
-
     short_fields = [
         IDField('Name'),
         Field('CreationDate'),
     ]
-
     long_fields = []
     detail_fields = [
         DictField('AccelerateConfiguration'),
