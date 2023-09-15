@@ -11,15 +11,16 @@ from ei.core.fields import DictField
 from ei.core.fields import extract_from_tag
 from ei.core.fields import extract
 from ei.core.fields import count
-from ei.services.aws.ec2 import AwsEc2VpcService
-from ei.services.aws.ec2 import AwsEc2SubnetService
-from ei.services.aws.ec2 import AwsEc2InstanceService
 from ei.services.aws.ec2 import AwsEc2AmiService
+from ei.services.aws.ec2 import AwsEc2CustomerGatewayService
+from ei.services.aws.ec2 import AwsEc2InstanceService
 from ei.services.aws.ec2 import AwsEc2RouteTableService
+from ei.services.aws.ec2 import AwsEc2SecurityGroupService
+from ei.services.aws.ec2 import AwsEc2SubnetService
 from ei.services.aws.ec2 import AwsEc2TransitGatewayService
+from ei.services.aws.ec2 import AwsEc2VpcService
 from ei.services.aws.ec2 import AwsEc2VpnConnectionService
 from ei.services.aws.ec2 import AwsEc2VpnGatewayService
-from ei.services.aws.ec2 import AwsEc2SecurityGroupService
 
 
 group = CliGroup(name='ec2', description='AWS EC2')
@@ -286,5 +287,28 @@ class Ec2VpnConnectionCli(BaseCliApp):
         DictField('Routes'),
         DictField('VgwTelemetry'),
         DictField('Options'),
+        TagField('Tags')
+    ]
+
+
+@group.app
+class Ec2CustomerGatewayCli(BaseCliApp):
+    name: str = 'customer-gateway'
+    description: str = 'EC2 VPC Customer Gateways'
+    service_cls = AwsEc2CustomerGatewayService
+    stats_fields = []
+    short_fields = [
+        IDField('CustomerGatewayId'),
+        Field('Name', serializer=extract_from_tag('Name')),
+        Field('BgpAsn'),
+        Field('IpAddress'),
+        Field('Type'),
+        Field('State'),
+        Field('DeviceName')
+    ]
+    long_fields = [
+        Field('CertificateArn')
+    ]
+    detail_fields = [
         TagField('Tags')
     ]
