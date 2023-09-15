@@ -323,3 +323,20 @@ class AwsEc2VpnConnectionService(BaseEC2Service):
             VpnConnectionIds=[id])
 
         return vpn_connections
+
+
+class AwsEc2CustomerGatewayService(BaseEC2Service):
+    resource_name = 'CustomerGateways'
+
+    @classmethod
+    def _list(cls, client: EC2Client) -> Any:
+        customer_gateways = client.describe_customer_gateways()
+
+        return customer_gateways
+
+    @classmethod
+    def _show(cls, client: EC2Client, id: str) -> Any:
+        customer_gateways = client.describe_customer_gateways(
+            CustomerGatewayIds=[id])
+
+        return customer_gateways
