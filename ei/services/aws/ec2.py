@@ -289,3 +289,37 @@ class AwsEc2TransitGatewayService(BaseEC2Service):
 
         refined_attachments = cls._refine_attachments(attachments)
         return refined_attachments
+
+
+class AwsEc2VpnGatewayService(BaseEC2Service):
+    resource_name = 'VpnGateways'
+
+    @classmethod
+    def _list(cls, client: EC2Client) -> Any:
+        vpn_connections = client.describe_vpn_gateways()
+
+        return vpn_connections
+
+    @classmethod
+    def _show(cls, client: EC2Client, id: str) -> Any:
+        vpn_connections = client.describe_vpn_gateways(
+            VpnGatewayIds=[id])
+
+        return vpn_connections
+
+
+class AwsEc2VpnConnectionService(BaseEC2Service):
+    resource_name = 'VpnConnections'
+
+    @classmethod
+    def _list(cls, client: EC2Client) -> Any:
+        vpn_connections = client.describe_vpn_connections()
+
+        return vpn_connections
+
+    @classmethod
+    def _show(cls, client: EC2Client, id: str) -> Any:
+        vpn_connections = client.describe_vpn_connections(
+            VpnConnectionIds=[id])
+
+        return vpn_connections

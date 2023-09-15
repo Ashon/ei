@@ -17,6 +17,8 @@ from ei.services.aws.ec2 import AwsEc2InstanceService
 from ei.services.aws.ec2 import AwsEc2AmiService
 from ei.services.aws.ec2 import AwsEc2RouteTableService
 from ei.services.aws.ec2 import AwsEc2TransitGatewayService
+from ei.services.aws.ec2 import AwsEc2VpnConnectionService
+from ei.services.aws.ec2 import AwsEc2VpnGatewayService
 from ei.services.aws.ec2 import AwsEc2SecurityGroupService
 
 
@@ -240,4 +242,49 @@ class Ec2TransitGatewayCli(BaseCliApp):
         DictField('VpcAttachments'),
         DictField('PeeringAttachments'),
         DictField('OtherAttachments'),
+    ]
+
+
+@group.app
+class Ec2VpnGatewayCli(BaseCliApp):
+    name: str = 'vpn-gateway'
+    description: str = 'EC2 VPC Vpn Gateways'
+    service_cls = AwsEc2VpnGatewayService
+    stats_fields = []
+    short_fields = [
+        IDField('VpnGatewayId'),
+        Field('AmazonSideAsn'),
+        Field('AvailabilityZone'),
+        Field('State'),
+        Field('Type')
+    ]
+    long_fields = []
+    detail_fields = [
+        DictField('VpcAttachments'),
+        TagField('Tags')
+    ]
+
+
+@group.app
+class Ec2VpnConnectionCli(BaseCliApp):
+    name: str = 'vpn-connection'
+    description: str = 'EC2 VPC Vpn Connections'
+    service_cls = AwsEc2VpnConnectionService
+    stats_fields = []
+    short_fields = [
+        IDField('VpnConnectionId'),
+        Field('Name', serializer=extract_from_tag('Name')),
+        Field('CustomerGatewayId'),
+        Field('Category'),
+        Field('Type'),
+        Field('State'),
+        Field('GatewayAssociationState')
+    ]
+    long_fields = []
+    detail_fields = [
+        Field('CustomerGatewayConfiguration'),
+        DictField('Routes'),
+        DictField('VgwTelemetry'),
+        DictField('Options'),
+        TagField('Tags')
     ]
