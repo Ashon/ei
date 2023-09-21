@@ -16,6 +16,7 @@ from ei.services.aws.ec2 import AwsEc2TransitGatewayService
 from ei.services.aws.ec2 import AwsEc2VpcService
 from ei.services.aws.ec2 import AwsEc2VpnConnectionService
 from ei.services.aws.ec2 import AwsEc2VpnGatewayService
+from ei.services.aws.ec2 import AwsEc2VolumeService
 from ei.services.aws.elasticache import AwsElasticacheCacheClusterService
 from ei.services.aws.elasticache import AwsElasticacheEventService
 from ei.services.aws.elasticache import AwsElasticacheReplicationGroupService
@@ -41,6 +42,7 @@ SERVICE_CLASSES = [
     AwsEc2VpcService,
     AwsEc2VpnConnectionService,
     AwsEc2VpnGatewayService,
+    AwsEc2VolumeService,
     AwsElasticacheCacheClusterService,
     AwsElasticacheEventService,
     AwsElasticacheReplicationGroupService,

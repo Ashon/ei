@@ -119,6 +119,20 @@ class AwsEc2AmiService(BaseEC2Service):
         return image
 
 
+class AwsEc2VolumeService(BaseEC2Service):
+    resource_name = 'Volumes'
+
+    @classmethod
+    def _list(cls, client: EC2Client) -> Any:
+        volumes = client.describe_volumes()
+        return volumes
+
+    @classmethod
+    def _show(cls, client: EC2Client, id: str) -> Any:
+        volume = client.describe_volumes(VolumeIds=[id])
+        return volume
+
+
 class AwsEc2RouteTableService(BaseEC2Service):
     resource_name = 'RouteTables'
 
