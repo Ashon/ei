@@ -22,6 +22,8 @@ CONFIGS = (
     AWS_SECRET_ACCESS_KEY,
     # AWS_SECURITY_TOKEN,
     # AWS_SESSION_EXPIRATION,
+
+    EI_SERVER_CORS_ORIGINS,
 ) = (
     os.getenv('EI_CREDENTIAL_RESOLVER', 'sts'),
 
@@ -34,6 +36,7 @@ CONFIGS = (
     os.getenv('AWS_SECRET_ACCESS_KEY', ''),
     # os.getenv('AWS_SECURITY_TOKEN', ''),
     # os.getenv('AWS_SESSION_EXPIRATION', '')
+    os.getenv('EI_SERVER_CORS_ORIGINS', 'http://localhost:3000'),
 )
 
 
@@ -51,4 +54,5 @@ def print_config() -> str:
         f'AWS_SECRET_ACCESS_KEY={AWS_SECRET_ACCESS_KEY!r}',
         # f'AWS_SECURITY_TOKEN={AWS_SECURITY_TOKEN!r}',
         # f'AWS_SESSION_EXPIRATION={AWS_SESSION_EXPIRATION!r}',
+        f'EI_SERVER_CORS_ORIGINS={EI_SERVER_CORS_ORIGINS!r}',
     ))
