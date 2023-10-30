@@ -82,9 +82,7 @@ def create_server(service_classes: List[Type[BaseAwsService]]) -> FastAPI:
         description='AWS Retrieve API'
     )
 
-    origins = [
-        'http://localhost:3000',
-    ]
+    origins = defaults.EI_SERVER_CORS_ORIGINS.split(',')
 
     app.add_middleware(
         CORSMiddleware,
