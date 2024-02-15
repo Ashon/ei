@@ -21,6 +21,7 @@ from ei.services.aws.ec2 import AwsEc2TransitGatewayService
 from ei.services.aws.ec2 import AwsEc2VpcService
 from ei.services.aws.ec2 import AwsEc2VpnConnectionService
 from ei.services.aws.ec2 import AwsEc2VpnGatewayService
+from ei.services.aws.ec2 import AwsEc2VolumeService
 
 
 group = CliGroup(name='ec2', description='AWS EC2')
@@ -212,6 +213,38 @@ class Ec2Ami(BaseCliApp):
         Field('OwnerId'),
         DictField('BlockDeviceMappings'),
         Field('ImageOwnerAlias'),
+    ]
+
+
+@group.app
+class Ec2VolumeCli(BaseCliApp):
+    name: str = 'volume'
+    description: str = 'EC2 AMI'
+    service_cls: Type[BaseAwsService] = AwsEc2VolumeService
+    short_fields = [
+        IDField('VolumeId'),
+        Field('Name', serializer=extract_from_tag('Name')),
+        Field('AvailabilityZone'),
+        Field('State'),
+        Field('VolumeType'),
+        Field('# Attachments', serializer=count('Attachments')),
+        BooleanField('MultiAttachEnabled'),
+        BooleanField('Encrypted'),
+        Field('Size'),
+        Field('Iops'),
+        Field('Throughput'),
+    ]
+    long_fields = [
+        BooleanField('FastRestored'),
+        Field('CreateTime'),
+        Field('KmsKeyId'),
+        Field('OutpostArn'),
+        Field('SnapshotId'),
+        Field('SseType'),
+    ]
+    detail_fields = [
+        DictField('Attachments'),
+        TagField('Tags')
     ]
 
 
