@@ -4,6 +4,7 @@ from typing import Union
 from itertools import chain
 
 from mypy_boto3_ec2 import EC2Client
+from mypy_boto3_ec2.type_defs import InstanceTypeDef
 from mypy_boto3_ec2.type_defs import TransitGatewayPeeringAttachmentTypeDef
 from mypy_boto3_ec2.type_defs import TransitGatewayVpcAttachmentTypeDef
 from mypy_boto3_ec2.type_defs import TransitGatewayAttachmentTypeDef
@@ -59,7 +60,8 @@ class AwsEc2InstanceService(BaseEC2Service):
     resource_name = 'Instances'
 
     @classmethod
-    def _populate_instance(cls, client, instance):
+    def _populate_instance(
+            cls, client: EC2Client, instance: InstanceTypeDef) -> dict:
         image_response = client.describe_images(
             ImageIds=[instance['ImageId']]
         )
