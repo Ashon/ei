@@ -64,6 +64,9 @@ Source = "https://github.com/unknown/ei"
 [project.scripts]
 ei = "ei.main:cli"
 
+[tool.hatch.build.targets.wheel]
+packages = ["ei"]
+
 [tool.hatch.version]
 path = "ei/__about__.py"
 

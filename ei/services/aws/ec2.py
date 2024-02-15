@@ -4,6 +4,7 @@ from typing import Union
 from itertools import chain
 
 from mypy_boto3_ec2 import EC2Client
+from mypy_boto3_ec2.type_defs import InstanceTypeDef
 from mypy_boto3_ec2.type_defs import TransitGatewayPeeringAttachmentTypeDef
 from mypy_boto3_ec2.type_defs import TransitGatewayVpcAttachmentTypeDef
 from mypy_boto3_ec2.type_defs import TransitGatewayAttachmentTypeDef
@@ -59,6 +60,21 @@ class AwsEc2InstanceService(BaseEC2Service):
     resource_name = 'Instances'
 
     @classmethod
+    def _populate_instance(
+            cls, client: EC2Client, instance: InstanceTypeDef) -> dict:
+        image_response = client.describe_images(
+            ImageIds=[instance['ImageId']]
+        )
+
+        image_info = None
+        if image_response['Images']:
+            image_info = image_response['Images'][0]
+
+        instance.update({'image': image_info})
+
+        return instance
+
+    @classmethod
     def _list(cls, client: EC2Client) -> Any:
         reservations = client.describe_instances()['Reservations']
         instances = [
@@ -66,9 +82,11 @@ class AwsEc2InstanceService(BaseEC2Service):
             for reservation in reservations
         ]
 
-        iterable = chain(*instances)
+        instances = list(chain(*instances))
+        for instance in instances:
+            cls._populate_instance(client, instance)
 
-        return {'Instances': iterable}
+        return {'Instances': instances}
 
     @classmethod
     def _show(cls, client: EC2Client, id: str) -> Any:
@@ -80,6 +98,7 @@ class AwsEc2InstanceService(BaseEC2Service):
             reservation['Instances']
             for reservation in reservations
         ]
+        cls._populate_instance(client, instance)
 
         return {'Instances': instance}
 
