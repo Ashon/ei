@@ -149,6 +149,18 @@ class AwsEc2RouteTableService(BaseEC2Service):
         return route_table
 
 
+class AwsEc2PrefixListService(BaseEC2Service):
+    resource_name = 'PrefixLists'
+
+    @classmethod
+    def _list(cls, client: EC2Client) -> Any:
+        return client.describe_prefix_lists()
+
+    @classmethod
+    def _show(cls, client: EC2Client, id: str) -> Any:
+        return client.describe_prefix_lists(PrefixListIds=[id])
+
+
 class TransitGatewayNotFoundError(ResourceNotfoundError):
     pass
 
