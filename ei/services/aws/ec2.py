@@ -70,9 +70,9 @@ class AwsEc2InstanceService(BaseEC2Service):
         if image_response['Images']:
             image_info = image_response['Images'][0]
 
-        instance.update({'image': image_info})
+        instance.update({'image': image_info})  # type: ignore
 
-        return instance
+        return instance  # type: ignore
 
     @classmethod
     def _list(cls, client: EC2Client) -> Any:
@@ -82,9 +82,9 @@ class AwsEc2InstanceService(BaseEC2Service):
             for reservation in reservations
         ]
 
-        instances = list(chain(*instances))
+        instances = list(chain(*instances))  # type: ignore
         for instance in instances:
-            cls._populate_instance(client, instance)
+            cls._populate_instance(client, instance)  # type: ignore
 
         return {'Instances': instances}
 
@@ -98,7 +98,7 @@ class AwsEc2InstanceService(BaseEC2Service):
             reservation['Instances']
             for reservation in reservations
         ]
-        cls._populate_instance(client, instance)
+        cls._populate_instance(client, instance)  # type: ignore
 
         return {'Instances': instance}
 
@@ -178,7 +178,7 @@ class AwsEc2ManagedPrefixListService(BaseEC2Service):
             PrefixListIds=[id])
 
         for prefix_list in prefix_list_response['PrefixLists']:
-            prefix_list.update({
+            prefix_list.update({  # type: ignore
                 'Entries': (
                     client.get_managed_prefix_list_entries(
                         PrefixListId=id
