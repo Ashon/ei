@@ -162,11 +162,15 @@ class AwsEc2PrefixListService(BaseEC2Service):
 
 
 class AwsEc2ManagedPrefixListService(BaseEC2Service):
-    resource_name = 'PrefixLists'
+    resource_name = 'ManagedPrefixLists'
 
     @classmethod
     def _list(cls, client: EC2Client) -> Any:
-        return client.describe_managed_prefix_lists()
+        return {
+            'ManagedPrefixLists': (
+                client.describe_managed_prefix_lists()['PrefixLists']
+            )
+        }
 
     @classmethod
     def _show(cls, client: EC2Client, id: str) -> Any:
@@ -182,7 +186,9 @@ class AwsEc2ManagedPrefixListService(BaseEC2Service):
                 )
             })
 
-        return prefix_list_response
+        return {
+            'ManagedPrefixLists': [prefix_list]
+        }
 
 
 class TransitGatewayNotFoundError(ResourceNotfoundError):

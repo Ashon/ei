@@ -17,6 +17,8 @@ from ei.services.aws.ec2 import AwsEc2VpcService
 from ei.services.aws.ec2 import AwsEc2VpnConnectionService
 from ei.services.aws.ec2 import AwsEc2VpnGatewayService
 from ei.services.aws.ec2 import AwsEc2VolumeService
+from ei.services.aws.ec2 import AwsEc2ManagedPrefixListService
+from ei.services.aws.ec2 import AwsEc2PrefixListService
 from ei.services.aws.elasticache import AwsElasticacheCacheClusterService
 from ei.services.aws.elasticache import AwsElasticacheEventService
 from ei.services.aws.elasticache import AwsElasticacheReplicationGroupService
@@ -50,7 +52,9 @@ SERVICE_CLASSES = [
     AwsElbLoadbalancerService,
     AwsElbTargetGroupService,
     AwsRdsInstanceService,
-    AwsS3BucketService
+    AwsS3BucketService,
+    AwsEc2ManagedPrefixListService,
+    AwsEc2PrefixListService
 ]
 
 APPS = [
