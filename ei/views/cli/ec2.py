@@ -11,7 +11,7 @@ from ei.core.fields import DictField
 from ei.core.fields import extract_from_tag
 from ei.core.fields import extract
 from ei.core.fields import count
-from ei.services.aws.ec2 import AwsEc2AmiService, AwsEc2PrefixListService
+from ei.services.aws.ec2 import AwsEc2AmiService, AwsEc2ManagedPrefixListService, AwsEc2PrefixListService
 from ei.services.aws.ec2 import AwsEc2CustomerGatewayService
 from ei.services.aws.ec2 import AwsEc2InstanceService
 from ei.services.aws.ec2 import AwsEc2RouteTableService
@@ -116,6 +116,26 @@ class Ec2PrefixListCli(BaseCliApp):
     ]
     long_fields = []
     detail_fields = []
+
+
+@group.app
+class Ec2ManagedPrefixListCli(BaseCliApp):
+    name: str = 'managed-prefix-list'
+    description: str = 'EC2 Managed Prefix List'
+    service_cls = AwsEc2ManagedPrefixListService
+    short_fields = [
+        IDField('PrefixListId'),
+        Field('PrefixListName'),
+        Field('AddressFamily'),
+        Field('State'),
+        Field('MaxEntries'),
+    ]
+    long_fields = [
+        Field('PrefixListArn'),
+    ]
+    detail_fields = [
+        DictField('Entries'),
+    ]
 
 
 @group.app
