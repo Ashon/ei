@@ -23,5 +23,4 @@ jobs:
     - name: build & publish
       run: ./scripts/publish.sh
       env:
-        HATCH_INDEX_USER: __token__
-        HATCH_INDEX_AUTH: ${{ secrets.PYPI_TOKEN }}
+        UV_PUBLISH_TOKEN: ${{ secrets.PYPI_TOKEN }}
