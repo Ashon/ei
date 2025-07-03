@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "ei-cli"
 description = 'aws cli for human'
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.13"
 license = "MIT"
 keywords = []
 authors = [
@@ -15,11 +15,8 @@ authors = [
 classifiers = [
   "Development Status :: 4 - Beta",
   "Programming Language :: Python",
-  "Programming Language :: Python :: 3.7",
-  "Programming Language :: Python :: 3.8",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
@@ -45,15 +42,13 @@ dependencies = [
 
 dynamic = ["version"]
 
-[project.optional-dependencies]
-devel = [
-  "hatch==1.6.3",
-  "flake8==5.0.4; python_version < '3.8'",
-  "flake8==6.0.0; python_version >= '3.8'",
-  "pytest>=7.2.0",
-  "pytest-cov>=4.0.0",
-  "mypy>=1.4.1; python_version < '3.8'",
-  "mypy>=1.5.1; python_version >= '3.8'"
+[dependency-groups]
+dev = [
+    "hatch>=1.6.3",
+    "mypy>=1.16.1",
+    "pytest>=8.4.1",
+    "pytest-cov>=6.2.1",
+    "ruff>=0.12.1",
 ]
 
 [project.urls]
@@ -75,14 +70,6 @@ dependencies = [
   "pytest",
   "pytest-cov",
 ]
-
-[tool.hatch.envs.default.scripts]
-lint = "flake8 ."
-test = "pytest ."
-typecheck = "mypy ."
-
-[[tool.hatch.envs.test.matrix]]
-python = ["37", "38", "39", "310", "311"]
 
 [tool.pytest.ini_options]
 addopts = [

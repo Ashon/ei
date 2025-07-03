@@ -6,10 +6,10 @@ scriptPath=$(dirname $0)
 . $scriptPath/_utils.sh
 
 log '[1/3] Install dependencies'
-pip install -e '.[devel]'
+uv sync
 
 log "[2/3] Build packages"
-hatch build
+uv build
 
 log "[3/3] Pubilsh to pypi"
-hatch publish
+uv publish

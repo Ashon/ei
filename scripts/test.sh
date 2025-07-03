@@ -14,16 +14,16 @@ else
 fi
 
 log "Run Test ${python_version} ${py_version_arg}"
-log "- on python version: $(python --version)"
+log "- on python version: $(uv run python --version)"
 
 log '[1/4] Install dependencies'
-pip install -e '.[devel]'
+uv sync
 
 log "[2/4] Lint"
-hatch run ${py_version_arg} test:lint
+uv run ruff check
 
 log "[3/4] TypeChecking"
-hatch run ${py_version_arg} test:typecheck
+uv run mypy .
 
 log "[4/4] UnitTest"
-hatch run ${py_version_arg} test:test
+uv run pytest
