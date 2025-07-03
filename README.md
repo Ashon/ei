@@ -3,11 +3,8 @@
 AWS CLI for humans. [![PyPI version](https://badge.fury.io/py/ei-cli.svg)](https://badge.fury.io/py/ei-cli)
 
 [![codecov](https://codecov.io/gh/Ashon/ei/branch/main/graph/badge.svg?token=HSW2NN23BY)](https://codecov.io/gh/Ashon/ei)
-[![CI-Python-3.7](https://github.com/Ashon/ei/actions/workflows/ci-py37.yml/badge.svg)](https://github.com/Ashon/ei/actions/workflows/ci-py37.yml)
-[![CI-Python-3.8](https://github.com/Ashon/ei/actions/workflows/ci-py38.yml/badge.svg)](https://github.com/Ashon/ei/actions/workflows/ci-py38.yml)
-[![CI-Python-3.9](https://github.com/Ashon/ei/actions/workflows/ci-py39.yml/badge.svg)](https://github.com/Ashon/ei/actions/workflows/ci-py39.yml)
-[![CI-Python-3.10](https://github.com/Ashon/ei/actions/workflows/ci-py310.yml/badge.svg)](https://github.com/Ashon/ei/actions/workflows/ci-py310.yml)
-[![CI-Python-3.11](https://github.com/Ashon/ei/actions/workflows/ci-py311.yml/badge.svg)](https://github.com/Ashon/ei/actions/workflows/ci-py311.yml)
+[![CI-Python-3.12](https://github.com/Ashon/ei/actions/workflows/ci-py312.yml/badge.svg)](https://github.com/Ashon/ei/actions/workflows/ci-py312.yml)
+[![CI-Python-3.13](https://github.com/Ashon/ei/actions/workflows/ci-py313.yml/badge.svg)](https://github.com/Ashon/ei/actions/workflows/ci-py313.yml)
 
 ## Installation
 
