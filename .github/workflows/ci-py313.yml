@@ -13,10 +13,13 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        enable-cache: true
     - uses: actions/setup-python@v4
       with:
         python-version: '3.13'
-        cache: 'pip'
 
     - name: Run test
       run: ./scripts/test.sh 313
